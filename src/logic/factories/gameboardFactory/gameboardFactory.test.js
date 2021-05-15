@@ -1,12 +1,13 @@
 import gameboardFactory from "./gameboardFactory"
+import shipFactory from "../shipFactory/shipFactory"
 
 test("test gameboardFactory is valid", () => {
     expect(gameboardFactory).toBeTruthy()
 })
 
 test("test gameboardFactory starts with empty gameboard", () => {
-    const newGameboardFactory = gameboardFactory()
-    expect(newGameboardFactory.gameboard).toStrictEqual([])
+    const newGameboard = gameboardFactory()
+    expect(newGameboard.gameboard).toStrictEqual([])
 })
 
 test("test initGameboard creates full array", () => {
@@ -20,8 +21,8 @@ test("test initGameboard creates full array", () => {
         testArray.push(gameSquare)
     }
 
-    const newGameboardFactory = gameboardFactory()
-    expect(newGameboardFactory.initGameboard()).toStrictEqual(testArray)
+    const newGameboard = gameboardFactory()
+    expect(newGameboard.initGameboard()).toStrictEqual(testArray)
 })
 
 test('test ID array formatting console.table() debugging', () => {
@@ -38,10 +39,10 @@ test('test ID array formatting console.table() debugging', () => {
         [90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
     ]
 
-    const newGameboardFactory = gameboardFactory()
-    newGameboardFactory.initGameboard()
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
 
-    expect(newGameboardFactory.displayArrayId()).toStrictEqual(testArray)
+    expect(newGameboard.displayArrayId()).toStrictEqual(testArray)
 })
 
 test('test occupied array formatting console.table() debugging', () => {
@@ -58,8 +59,158 @@ test('test occupied array formatting console.table() debugging', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    const newGameboardFactory = gameboardFactory()
-    newGameboardFactory.initGameboard()
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
 
-    expect(newGameboardFactory.displayArrayOccupied()).toStrictEqual(testArray)
+    expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray)
+})
+
+test('test horizontal destroyer placement in correct area', () => {
+    let testArray = [
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = shipFactory()
+    const destroyer = newFleet.fleet[0]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(destroyer, 0, 0)
+
+    expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray)
+})
+
+test('test vertical destroyer placement in correct area', () => {
+    let testArray = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = shipFactory()
+    const destroyer = newFleet.fleet[0]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(destroyer, 0, 1)
+
+    expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray)
+})
+
+test('test horizontal destroyer placement in incorrect area', () => {
+    let testArray = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = shipFactory()
+    const destroyer = newFleet.fleet[0]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(destroyer, 9, 0)
+
+    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+})
+
+test('test horizontal destroyer placement in array out of bounds', () => {
+    let testArray = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    ]
+
+    const newFleet = shipFactory()
+    const destroyer = newFleet.fleet[0]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(destroyer, 99, 0)
+
+    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+})
+
+
+test('test vertical destroyer placement in incorrect area and array out of array bounds', () => {
+    let testArray = [
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = shipFactory()
+    const destroyer = newFleet.fleet[0]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(destroyer, 93, 1)
+
+    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+})
+
+test('test placing all ships on gameboard with no collisions', () => {
+    let testArray = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    
+    const newFleet = shipFactory()
+    const fleet = newFleet.fleet
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeAllShips(fleet)
+
+    let occupyArray = newGameboard.gameboard.map(square => +square.occupied)
+    let totalShips = occupyArray.reduce((a, b) => a + b)
+
+    console.table(newGameboard.displayArrayOccupied());
+    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray) // Array should not be empty after placements
+    expect(totalShips).toBe(17) // If no collisions, there should be 17 spots occupied by the ships
 })
