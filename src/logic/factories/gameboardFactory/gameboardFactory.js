@@ -1,24 +1,62 @@
-const gameBoardFactory = () => {
+const gameboardFactory = () => {
 
-    let gameBoard = []
+    let gameboard = []
 
-    const initGameBoard = () => {
-        let gameBoard = []
-
+    const initGameboard = () => {
         for(let i=0; i<100; i++) {
             let gameSquare = {
+                id: i,
                 occupied: false,
                 hit: false,
-                id: i
             }
-            gameBoard.push(gameSquare)
+            gameboard.push(gameSquare)
         }
+
+        return gameboard
+    }
+
+    // Displays gameboard 1D array as 2D array of IDs. 
+    // Used for debugging with console.table().
+    const displayArrayId = () => {
+        let displayArray = []
+        let displayGameboard = gameboard.map(el => el["id"])
+
+        while(displayGameboard.length) {
+            displayArray.push( displayGameboard.splice(0, 10) )
+        }
+
+        return displayArray
+    }
+
+    // Displays gameboard 1D array as 2D array of occupied spaces. 
+    // Used for debugging with console.table().
+    const displayArrayOccupied = () => {
+        let displayArray = []
+        let displayGameboard = gameboard.map(el => +el["occupied"])
+
+        while(displayGameboard.length) {
+            displayArray.push( displayGameboard.splice(0, 10) )
+        }
+
+        return displayArray
+    }
+
+    // Displays gameboard 1D array as 2D array of objects. 
+    // Used for debugging with console.table().
+    const displayArray = () => {
+        let displayArray = []
+
+        while(gameboard.length) {
+            displayArray.push( gameboard.splice(0, 10) )
+        }
+
+        return displayArray
     }
 
     // Checks if ship has collided with other ships.
     // FIXME: Possibility of accessing out of bounds array.
     const checkShipCollision = (position, orientation) => {
-        return orientation.some(index => gameBoard[position + index].occupied === true)
+        return orientation.some(index => gameboard[position + index].occupied === true)
     }
 
     // Check if ship is out of bounds on horizontal axis.
@@ -42,8 +80,8 @@ const gameBoardFactory = () => {
         let currentShipOrientation = ship.orientation[randomOrientation]
         
         // Randomly select starting positition of ship.  
-        let randomPosition = Math.floor(Math.random() * gameBoard.length)
-        let currentShipPosition = gameBoard[randomPosition]
+        let randomPosition = Math.floor(Math.random() * gameboard.length)
+        let currentShipPosition = gameboard[randomPosition]
 
         //Check if ship collides with other ships.
         invalidPlacement = checkShipCollision(currentShipPosition, currentShipOrientation)
@@ -65,13 +103,18 @@ const gameBoardFactory = () => {
         }
         else {
             // Populate gameboard.
-            currentShipOrientation.forEach(index => gameBoard[currentShipPosition + index].occupied = true)
+            currentShipOrientation.forEach(index => gameboard[currentShipPosition + index].occupied = true)
         }
     }
 
-    return gameBoard
+    return {
+        gameboard,
+        initGameboard,
+        displayArrayId,
+        displayArrayOccupied,
+        displayArray,
+        placeShip
+    }
 }
 
-export default gameBoardFactory
-
-// module.exports = gameBoardFactory.initGameBoard
+export default gameboardFactory
