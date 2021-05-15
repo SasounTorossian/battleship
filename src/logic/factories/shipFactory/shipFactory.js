@@ -3,6 +3,13 @@ const shipFactory = () => {
         {
             type: "Destroyer",
             length: 2,
+            hull: [0, 0],
+            hit: function(segment) {
+                this.hull[segment] = 1
+            },
+            isSunk: function() {
+                return this.hull.every(segment => segment === 1)
+            },
             orientation: [
                 [0, 1],
                 [0, 10]
@@ -11,6 +18,13 @@ const shipFactory = () => {
         {
             type: "Submarine",
             length: 3,
+            hull: [0, 0, 0],
+            hit: function(segment) {
+                this.hull[segment] = 1
+            },
+            isSunk: function() {
+                return this.hull.every(segment => segment === 1)
+            },
             orientation: [
                 [0, 1, 2],
                 [0, 10, 20]
@@ -19,6 +33,13 @@ const shipFactory = () => {
         {
             type: "Cruiser",
             length: 3,
+            hull: [0, 0, 0],
+            hit: function(segment) {
+                this.hull[segment] = 1 
+            },
+            isSunk: function() {
+                return this.hull.every(segment => segment === 1) 
+            },
             orientation: [
                 [0, 1, 2],
                 [0, 10, 20]
@@ -27,6 +48,13 @@ const shipFactory = () => {
         {
             type: "Battleship",
             length: 4,
+            hull: [0, 0, 0, 0],
+            hit: function(segment) {
+                this.hull[segment] = 1 
+            },
+            isSunk: function() {
+                return this.hull.every(segment => segment === 1) 
+            },
             orientation: [
                 [0, 1, 2, 3],
                 [0, 10, 20, 30]
@@ -35,6 +63,13 @@ const shipFactory = () => {
         {
             type: "Carrier",
             length: 5,
+            hull: [0, 0, 0, 0, 0],
+            hit: function(segment) {
+                this.hull[segment] = 1 
+            },
+            isSunk: function() {
+                return this.hull.every(segment => segment === 1)
+            },
             orientation: [
                 [0, 1, 2, 3, 4],
                 [0, 10, 20, 30, 40]
@@ -48,4 +83,4 @@ const shipFactory = () => {
 
 } 
 
-export default fleetFactory
+export default shipFactory
