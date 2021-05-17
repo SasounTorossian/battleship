@@ -186,7 +186,7 @@ test('test vertical destroyer placement in incorrect area and array out of array
     expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
 })
 
-test('test placing all ships on gameboard with no collisions', () => {
+test.only('test placing all ships on gameboard with no collisions', () => {
     let testArray = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

@@ -2,12 +2,13 @@ const gameboardFactory = () => {
 
     let gameboard = []
 
+    // Initialize gameboard as 1D array of 100 objects.
     const initGameboard = () => {
         for(let i=0; i<100; i++) {
-            let gameSquare = {
-                id: i,
-                occupied: false,
-                hit: false,
+            let gameSquare = { 
+                id: i, 
+                occupied: false, 
+                hit: false 
             }
             gameboard.push(gameSquare)
         }
@@ -53,12 +54,9 @@ const gameboardFactory = () => {
         return displayArray
     }
 
-    // Checks if ship has collided with other ships.
+    // Check if ship placement interferes with existing ships.
     const checkShipCollision = (position, orientation) => {
-        return orientation.some(index => {
-            if (gameboard[position + index] === undefined) return true
-            else gameboard[position + index].occupied === true
-        })
+        return orientation.some(index => gameboard[position + index].occupied === true )
     }
 
     // Check if ship is out of bounds on horizontal axis.
@@ -76,48 +74,30 @@ const gameboardFactory = () => {
         fleet.forEach(ship => placeShip(ship))
     }
 
-
     // Places each ship object on the gameboard according to its parameters.
     const placeShip = (ship, testPosition = false, testOrientation = false) => {
-        let invalidPlacement
 
         // Randomly select (or test select) horizontal or vertical orientation of ship.
         let randomOrientation
         let currentShipOrientation
-        if(testOrientation !== false) {
-            randomOrientation = testOrientation
-            currentShipOrientation = ship.orientation[randomOrientation]
-        }
-        else {
-            randomOrientation = Math.floor(Math.random() * ship.orientation.length)
-            currentShipOrientation = ship.orientation[randomOrientation]
-        }
+        if(testOrientation !== false) { randomOrientation = testOrientation }
+        else { randomOrientation = Math.floor(Math.random() * ship.orientation.length) }
+        currentShipOrientation = ship.orientation[randomOrientation]
         
         // Randomly select (or test select) starting positition of ship.  
         let randomPosition
         if(testPosition !== false) { randomPosition = testPosition }
         else { randomPosition = Math.floor(Math.random() * gameboard.length) }
 
-        //Check if ship collides with other ships.
-        invalidPlacement = checkShipCollision(randomPosition, currentShipOrientation)
-
-        // If ship is horizontal, check horizontal bounds.
-        if(randomOrientation === 0) {
-            invalidPlacement = checkHorizontalOutOfBounds(randomPosition, currentShipOrientation)
-        }
-
-        // If ship is vertical, check vertical bounds.
-        if(randomOrientation === 1) {
-            invalidPlacement = checkVerticalOutOfBounds(randomPosition, currentShipOrientation)
-        }
-
-        if (invalidPlacement) { 
+        if((randomOrientation ? 
+            checkVerticalOutOfBounds(randomPosition, currentShipOrientation) :
+            checkHorizontalOutOfBounds(randomPosition, currentShipOrientation)) || 
+            checkShipCollision(randomPosition, currentShipOrientation))  
+        { 
             placeShip(ship) // recursively call function to properly place ship.
         }
         else {
-            // Populate gameboard.
-            console.log(`${ship.type} being placed ${randomOrientation ? "vertically" : "horizontally"} at ${randomPosition}`);
-            currentShipOrientation.forEach(index => gameboard[randomPosition + index].occupied = true)
+            currentShipOrientation.forEach(index => gameboard[randomPosition + index].occupied = true) // Populate gameboard.
         }
     }
 
