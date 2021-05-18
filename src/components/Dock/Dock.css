@@ -1,0 +1,45 @@
+.Dock {
+    background-color: blue;
+    height: 40%;
+    width: 100%;
+}
+
+.destroyer-container {
+    height: 40px;
+    width: 80px;
+    background-color: brown;
+    margin: 10px;
+    display: flex;
+}
+
+.submarine-container {
+    height: 40px;
+    width: 120px;
+    background-color: pink;
+    margin: 10px;
+    display: flex;
+}
+
+.cruiser-container {
+    height: 40px;
+    width: 120px;
+    background-color: green;
+    margin: 10px;
+    display: flex;
+}
+
+.battleship-container {
+    height: 40px;
+    width: 160px;
+    background-color: orange;
+    margin: 10px;
+    display: flex;
+}
+
+.carrier-container {
+    height: 40px;
+    width: 200px;
+    background-color: aqua;
+    margin: 10px;
+    display: flex;
+}
