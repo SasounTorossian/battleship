@@ -1,21 +1,22 @@
 import React from 'react'
-import './GameBoards.css'
+import './Gameboards.css'
 
-const GameBoards = ({ players }) => {
+const Gameboards = ({ players }) => {
     return (
-        <div className="GameBoards">
-            <GameBoard player={players[0]} />
+        <div className="Gameboards">
+            <Gameboard player={players[0]} />
+            <Gameboard player={players[1]} />
         </div>
     )
 }
 
-const GameBoard = ({ player }) => {
-    let gameBoard = player.fleet.gameBoard
+const Gameboard = ({ player }) => {
+    let gameboard = player.fleet.gameboard
 
     return (
-        <div className="GameBoard">
+        <div className="Gameboard">
         </div>
     )
 }
 
-export default GameBoards
+export default Gameboards
