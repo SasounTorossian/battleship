@@ -77,8 +77,13 @@ const shipFactory = () => {
         },
     ]
 
+    const checkIfFleetSunk = () => {
+        return fleet.every(ship => ship.isSunk())
+    }
+
     return {
-        fleet
+        fleet,
+        checkIfFleetSunk
     }
 
 } 
