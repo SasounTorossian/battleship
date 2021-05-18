@@ -16,5 +16,5 @@ test('test player object created correctly', () => {
 
     expect(player.name).toBe(expectedName)
     expect(player.fleet).toStrictEqual(expectedFleet)
-    expect(player.gameBoard).toStrictEqual(expectedGameboard)
+    expect(player.gameboard).toStrictEqual(expectedGameboard)
 })
