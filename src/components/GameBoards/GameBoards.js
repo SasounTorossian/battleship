@@ -2,6 +2,7 @@ import React from 'react'
 import './Gameboards.css'
 
 const Gameboards = ({ players }) => {
+    console.log(players);
     return (
         <div className="Gameboards">
             <Gameboard player={players[0]} />
