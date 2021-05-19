@@ -5,7 +5,7 @@ const shipFactory = () => {
             length: 2,
             hull: [0, 0],
             hit: function(segment) {
-                this.hull[segment] = 1
+                this.hull[segment] = 1 // TODO: Account for segment > hull.length
             },
             isSunk: function() {
                 return this.hull.every(segment => segment === 1)
