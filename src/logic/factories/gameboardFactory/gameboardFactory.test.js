@@ -1,5 +1,5 @@
 import gameboardFactory from "./gameboardFactory"
-import shipFactory from "../shipFactory/shipFactory"
+import fleetFactory from "../fleetFactory/fleetFactory"
 
 test("test gameboardFactory is valid", () => {
     expect(gameboardFactory).toBeTruthy()
@@ -79,8 +79,8 @@ test('test horizontal destroyer placement in correct area', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    const newFleet = shipFactory()
-    const destroyer = newFleet.fleet[0]
+    const newFleet = fleetFactory()
+    const destroyer = newFleet.ships[0]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
@@ -103,8 +103,8 @@ test('test vertical destroyer placement in correct area', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    const newFleet = shipFactory()
-    const destroyer = newFleet.fleet[0]
+    const newFleet = fleetFactory()
+    const destroyer = newFleet.ships[0]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
@@ -127,8 +127,8 @@ test('test horizontal destroyer placement in incorrect area', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    const newFleet = shipFactory()
-    const destroyer = newFleet.fleet[0]
+    const newFleet = fleetFactory()
+    const destroyer = newFleet.ships[0]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
@@ -151,8 +151,8 @@ test('test horizontal destroyer placement in array out of bounds', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
     ]
 
-    const newFleet = shipFactory()
-    const destroyer = newFleet.fleet[0]
+    const newFleet = fleetFactory()
+    const destroyer = newFleet.ships[0]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
@@ -176,8 +176,8 @@ test('test vertical destroyer placement in incorrect area and array out of array
         [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
     ]
 
-    const newFleet = shipFactory()
-    const destroyer = newFleet.fleet[0]
+    const newFleet = fleetFactory()
+    const destroyer = newFleet.ships[0]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
@@ -200,22 +200,21 @@ test('test placing all ships on gameboard with no collisions', () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
     
-    const newFleet = shipFactory()
-    const fleet = newFleet.fleet
+    const newFleet = fleetFactory()
+    const ships = newFleet.ships
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
-    newGameboard.placeAllShips(fleet)
+    newGameboard.placeAllShips(ships)
 
     let occupyArray = newGameboard.gameboard.map(square => +square.occupied)
     let totalShips = occupyArray.reduce((a, b) => a + b)
 
-    console.table(newGameboard.displayArrayOccupied());
     expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray) // Array should not be empty after placements
     expect(totalShips).toBe(17) // If no collisions, there should be 17 spots occupied by the ships
 })
 
-test.only('test carrier has position variable populated when placed vertically at position 57', () => {
+test('test carrier has position variable populated when placed vertically at position 57', () => {
     let testArray = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -229,9 +228,9 @@ test.only('test carrier has position variable populated when placed vertically a
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
     ]
     
-    const newFleet = shipFactory()
-    const fleet = newFleet.fleet
-    let carrier = fleet[4]
+    const newFleet = fleetFactory()
+    const ships = newFleet.ships
+    let carrier = ships[4]
 
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
