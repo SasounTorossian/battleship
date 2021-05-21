@@ -98,6 +98,7 @@ const gameboardFactory = () => {
         }
         else {
             currentShipOrientation.forEach(index => gameboard[randomPosition + index].occupied = true) // Populate gameboard.
+            currentShipOrientation.forEach(index => ship.position.push(randomPosition + index)) // Populates position variable in ship.
         }
     }
 

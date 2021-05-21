@@ -1,79 +1,90 @@
+// TODO: Fix ship/fleet naming convention
 const shipFactory = () => {
     const fleet = [
         {
             type: "Destroyer",
             length: 2,
-            hull: [0, 0],
-            hit: function(segment) {
-                this.hull[segment] = 1 // TODO: Account for segment > hull.length
-            },
-            isSunk: function() {
-                return this.hull.every(segment => segment === 1)
-            },
+            position: [],
             orientation: [
                 [0, 1],
                 [0, 10]
-            ]
+            ],
+            hit(segment) {
+                if(segment < position.length) {
+                    this.position[segment] = "X"
+                }
+            },
+            isSunk() {
+                return this.position.every(segment => segment === "X")
+            },
         },
         {
             type: "Submarine",
             length: 3,
-            hull: [0, 0, 0],
-            hit: function(segment) {
-                this.hull[segment] = 1
-            },
-            isSunk: function() {
-                return this.hull.every(segment => segment === 1)
-            },
+            position: [],
             orientation: [
                 [0, 1, 2],
                 [0, 10, 20]
-            ]
+            ],
+            hit(segment) {
+                if(segment < position.length) {
+                    this.position[segment] = "X"
+                }
+            },
+            isSunk() {
+                return this.position.every(segment => segment === "X")
+            },
         },
         {
             type: "Cruiser",
             length: 3,
-            hull: [0, 0, 0],
-            hit: function(segment) {
-                this.hull[segment] = 1 
-            },
-            isSunk: function() {
-                return this.hull.every(segment => segment === 1) 
-            },
+            position: [],
             orientation: [
                 [0, 1, 2],
                 [0, 10, 20]
-            ]
+            ],
+            hit(segment) {
+                if(segment < position.length) {
+                    this.position[segment] = "X"
+                }
+            },
+            isSunk() {
+                return this.position.every(segment => segment === "X")
+            },
         },
         {
             type: "Battleship",
             length: 4,
-            hull: [0, 0, 0, 0],
-            hit: function(segment) {
-                this.hull[segment] = 1 
-            },
-            isSunk: function() {
-                return this.hull.every(segment => segment === 1) 
-            },
+            position: [],
             orientation: [
                 [0, 1, 2, 3],
                 [0, 10, 20, 30]
-            ]
+            ],
+            hit(segment) {
+                if(segment < position.length) {
+                    this.position[segment] = "X"
+                }
+            },
+            isSunk() {
+                return this.position.every(segment => segment === "X")
+            },
         },
         {
             type: "Carrier",
             length: 5,
-            hull: [0, 0, 0, 0, 0],
-            hit: function(segment) {
-                this.hull[segment] = 1 
-            },
-            isSunk: function() {
-                return this.hull.every(segment => segment === 1)
-            },
+            position: [],
             orientation: [
                 [0, 1, 2, 3, 4],
                 [0, 10, 20, 30, 40]
-            ]
+            ],
+            hit(segment) {
+                if(segment < position.length) {
+                    this.position[segment] = "X"
+                }
+            },
+            isSunk() {
+                return this.position.every(segment => segment === "X")
+            },
         },
     ]
 

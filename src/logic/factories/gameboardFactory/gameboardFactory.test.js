@@ -214,3 +214,29 @@ test('test placing all ships on gameboard with no collisions', () => {
     expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray) // Array should not be empty after placements
     expect(totalShips).toBe(17) // If no collisions, there should be 17 spots occupied by the ships
 })
+
+test.only('test carrier has position variable populated when placed vertically at position 57', () => {
+    let testArray = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+    ]
+    
+    const newFleet = shipFactory()
+    const fleet = newFleet.fleet
+    let carrier = fleet[4]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(carrier, 57, 1)
+
+    expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray) // Array should not be empty after placements
+    expect(carrier.position).toStrictEqual([57, 67, 77, 87, 97]) // Array should not be empty after placements
+})
