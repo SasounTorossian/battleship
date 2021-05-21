@@ -1,9 +1,9 @@
-import shipFactory from "../shipFactory/shipFactory"
+import fleetFactory from "../fleetFactory/fleetFactory"
 import gameboardFactory from "../gameboardFactory/gameboardFactory"
 
 const playerFactory = (playerName) => {
     let name = playerName
-    let fleet = shipFactory()
+    let fleet = fleetFactory()
     let gameboard = gameboardFactory()
 
     return {

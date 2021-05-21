@@ -1,5 +1,5 @@
 import playerFactory from "./playerFactory"
-import shipFactory from "../shipFactory/shipFactory"
+import fleetFactory from "../fleetFactory/fleetFactory"
 import gameboardFactory from "../gameboardFactory/gameboardFactory"
 
 test('test player object created correctly', () => {
@@ -7,14 +7,15 @@ test('test player object created correctly', () => {
 
     let testPlayer ={
         name: "John Doe",
-        fleet: shipFactory(),
+        fleet: fleetFactory(),
         gameBoard: gameboardFactory()
     }
+    
     const expectedName = "John Doe"
-    const expectedFleet = shipFactory()
+    const expectedFleet = fleetFactory()
     const expectedGameboard = gameboardFactory()
 
     expect(player.name).toBe(expectedName)
-    expect(player.fleet).toStrictEqual(expectedFleet)
-    expect(player.gameboard).toStrictEqual(expectedGameboard)
+    expect(JSON.stringify(player.fleet)).toStrictEqual(JSON.stringify(expectedFleet))
+    expect(JSON.stringify(player.gameboard)).toStrictEqual(JSON.stringify(expectedGameboard))
 })
