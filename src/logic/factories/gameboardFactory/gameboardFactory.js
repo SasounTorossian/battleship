@@ -16,6 +16,19 @@ const gameboardFactory = () => {
         return gameboard
     }
 
+    // Displays gameboard 1D array as 2D array of hits. 
+    // Used for debugging with console.table().
+    const displayArrayHit = () => {
+        let displayArray = []
+        let displayGameboard = gameboard.map(el => +el["hit"])
+
+        while(displayGameboard.length) {
+            displayArray.push( displayGameboard.splice(0, 10) )
+        }
+
+        return displayArray
+    }
+
     // Displays gameboard 1D array as 2D array of IDs. 
     // Used for debugging with console.table().
     const displayArrayId = () => {
@@ -102,14 +115,46 @@ const gameboardFactory = () => {
         }
     }
 
+    // TODO: Check if functioning. What if undefined.
+    // Find which ship is occupying a particular position. 
+    const findShipFromPosition = (ships, pos) => {
+        return ships.find(ship => {
+            return ship.position.indexOf(pos) !== -1
+        })
+    }
+
+    const findIndexFromPosition = (ship, pos) => {
+        return ship.position.indexOf(pos)
+    }
+
+    const receiveAttack = (ships, hitPosition) => {
+        let ship
+        let index
+
+        if(ships !== undefined && hitPosition !== undefined) {
+            ship = findShipFromPosition(ships, hitPosition)
+        }
+        else { return }
+
+        if(ship !== undefined) {
+            index = findIndexFromPosition(ship, hitPosition)
+        }
+        else { return }
+
+        gameboard[hitPosition].hit = true
+        ship.hit(index)
+    }
+
     return {
         gameboard,
         initGameboard,
+        displayArrayHit,
         displayArrayId,
         displayArrayOccupied,
         displayArray,
         placeAllShips,
-        placeShip
+        placeShip,
+        receiveAttack
     }
 }
 

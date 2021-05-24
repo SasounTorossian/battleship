@@ -239,3 +239,59 @@ test('test carrier has position variable populated when placed vertically at pos
     expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray) // Array should not be empty after placements
     expect(carrier.position).toStrictEqual([57, 67, 77, 87, 97]) // Array should not be empty after placements
 })
+
+test('test receiveAttack() correctly damages ship.', () => {    
+    let testHitArray = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = fleetFactory()
+    const ships = newFleet.ships
+    let carrier = ships[4]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(carrier, 57, 1) //carrier.position = [57, 67, 77, 87, 97]
+    newGameboard.receiveAttack(ships, 57)
+    newGameboard.receiveAttack(ships, 87)
+
+    expect(carrier.position).toStrictEqual(["X", 67, 77, "X", 97]) // Position should be updated
+    expect(newGameboard.displayArrayHit()).toStrictEqual(testHitArray) // Hit array should be updated
+}) 
+
+test('test receiveAttack() exits gracefully if no ship at position', () => {    
+    let testHitArray = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    const newFleet = fleetFactory()
+    const ships = newFleet.ships
+    let carrier = ships[4]
+
+    const newGameboard = gameboardFactory()
+    newGameboard.initGameboard()
+    newGameboard.placeShip(carrier, 57, 1) //carrier.position = [57, 67, 77, 87, 97]
+    newGameboard.receiveAttack(ships, 98)
+    
+    expect(carrier.position).toStrictEqual([57, 67, 77, 87, 97]) // Carrier should be undamaged
+    expect(newGameboard.displayArrayHit()).toStrictEqual(testHitArray) // Hit array should remain unchanged
+}) 
+
