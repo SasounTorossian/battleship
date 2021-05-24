@@ -1,4 +1,3 @@
-// TODO: Fix ship/fleet naming convention
 const fleetFactory = () => {
     const ships = [
         {
@@ -10,7 +9,7 @@ const fleetFactory = () => {
                 [0, 10]
             ],
             hit(segment) {
-                if(segment < position.length) { // What if segment doesn't exist? 
+                if(segment < this.position.length) { // What if segment doesn't exist? 
                     this.position[segment] = "X"
                 }
             },
@@ -27,7 +26,7 @@ const fleetFactory = () => {
                 [0, 10, 20]
             ],
             hit(segment) {
-                if(segment < position.length) {
+                if(segment < this.position.length) {
                     this.position[segment] = "X"
                 }
             },
@@ -44,7 +43,7 @@ const fleetFactory = () => {
                 [0, 10, 20]
             ],
             hit(segment) {
-                if(segment < position.length) {
+                if(segment < this.position.length) {
                     this.position[segment] = "X"
                 }
             },
@@ -61,7 +60,7 @@ const fleetFactory = () => {
                 [0, 10, 20, 30]
             ],
             hit(segment) {
-                if(segment < position.length) {
+                if(segment < this.position.length) {
                     this.position[segment] = "X"
                 }
             },
@@ -78,7 +77,7 @@ const fleetFactory = () => {
                 [0, 10, 20, 30, 40]
             ],
             hit(segment) {
-                if(segment < position.length) {
+                if(segment < this.position.length) {
                     this.position[segment] = "X"
                 }
             },
@@ -93,34 +92,9 @@ const fleetFactory = () => {
         return ships.every(ship => ship.isSunk())
     }
 
-    // TODO: Check if functioning. What if undefined.
-    // Find which ship is occupying a particular position. 
-    const findShipFromPosition = (pos) => {
-        let foundShip
-
-        // Might return index
-        foundShip = ships.find(ship => {
-            return ship.position.indexOf(pos) !== -1
-        })
-
-        return foundShip
-    }
-
-    const findIndexFromPosition = (ship, pos) => {
-        return ship.position.indexOf(pos)
-    }
-
-    const hitShip = (positionToHit) => {
-        let ship = findShipFromPosition(positionToHit)
-        let index = findIndexFromPosition(ship, positionToHit)
-        ship.hit(index)
-    }
-
     return {
         ships,
         checkIfShipsSunk,
-        findShipFromPosition,
-        findIndexFromPosition
     }
 
 } 
