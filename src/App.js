@@ -9,6 +9,8 @@ function App() {
  const [players, setplayers] = useState([])
  const gameEngine = gameEngineModule()
 
+ // TODO: gameEngine handler that changes player state.
+
  // TODO: When/how does "players" have to be updated?
  // How will the game engine interact with the program and play-cycle.
  useEffect(() => {
