@@ -1,3 +1,5 @@
+import fleetFactory from "../fleetFactory/fleetFactory"
+
 const gameboardFactory = () => {
 
     let gameboard = []
@@ -7,7 +9,7 @@ const gameboardFactory = () => {
         for(let i=0; i<100; i++) {
             let gameSquare = { 
                 id: i, 
-                occupied: false, 
+                occupied: false, // NOTE: Could use ship{} as bool indicator of occupied?
                 hit: false,
                 ship: {}
             }
@@ -18,9 +20,12 @@ const gameboardFactory = () => {
     }
 
     // Handles oncoming clicks on the gameboard.
-    const clickHandler = (e, squareID) => {
+    const clickHandler = (e, ships, squareID) => {
+        //NOTE: based on e.target.ship.type, have different sound effects play?
         console.log(e.target);
+        console.log(ships);
         console.log(squareID);
+        receiveAttack(ships, squareID)
     }
 
     // Displays gameboard 1D array as 2D array of hits. 
@@ -130,30 +135,29 @@ const gameboardFactory = () => {
         })
     }
 
-    // TODO: Could possible move this to hit() function in ship objects.
+    // NOTE: Could possible move this to hit() function in ship objects.
     // Find which ship index corresponds to particular position. 
     const findIndexFromPosition = (ship, pos) => {
         return ship.position.indexOf(pos)
     }
 
-    // TODO: Need to handle hit and set gameboard[hitPosition].hit = true even if no ship. Terrible Logic.
     // Takes gameboard square as an ID, and passes hit to ship if it exists.
     const receiveAttack = (ships, hitPosition) => {
-        let ship
-        let index
-
-        if(ships !== undefined && hitPosition !== undefined) {
-            ship = findShipFromPosition(ships, hitPosition)
+        
+        if(gameboard[hitPosition].hit) {
+            return
         }
-        else { return }
-
-        if(ship !== undefined) {
-            index = findIndexFromPosition(ship, hitPosition)
+        else if(!gameboard[hitPosition].occupied) {
+            gameboard[hitPosition].hit = true
+            return
         }
-        else { return }
-
-        gameboard[hitPosition].hit = true
-        ship.hit(index)
+        else {
+            gameboard[hitPosition].hit = true
+            let ship = findShipFromPosition(ships, hitPosition)
+            let index = findIndexFromPosition(ship, hitPosition)
+            ship.hit(index)
+            //TODO: Need to call gameEngine here to progress game.
+        }
     }
 
     return {

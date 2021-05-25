@@ -12,6 +12,7 @@ const Gameboards = ({ players }) => {
 
 const Gameboard = ({ player }) => {
     let gameboard = player.gameboard
+    let ships = player.fleet.ships
 
     return (
         <div className="Gameboard">
@@ -21,7 +22,7 @@ const Gameboard = ({ player }) => {
                         <div 
                             className={`gamesquare gamesquare-${square.ship.type}`} 
                             key={square.id}
-                            onClick={(e) => gameboard.clickHandler(e, square.id)}
+                            onClick={(e) => gameboard.clickHandler(e, ships, square.id)}
                         >
 
                         </div>
