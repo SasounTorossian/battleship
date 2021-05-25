@@ -8,12 +8,19 @@ const gameboardFactory = () => {
             let gameSquare = { 
                 id: i, 
                 occupied: false, 
-                hit: false 
+                hit: false,
+                ship: {}
             }
             gameboard.push(gameSquare)
         }
 
         return gameboard
+    }
+
+    // Handles oncoming clicks on the gameboard.
+    const clickHandler = (e, squareID) => {
+        console.log(e.target);
+        console.log(squareID);
     }
 
     // Displays gameboard 1D array as 2D array of hits. 
@@ -111,11 +118,11 @@ const gameboardFactory = () => {
         }
         else {
             currentShipOrientation.forEach(index => gameboard[randomPosition + index].occupied = true) // Populate gameboard.
+            currentShipOrientation.forEach(index => gameboard[randomPosition + index].ship = ship) // Populate gameboard.
             currentShipOrientation.forEach(index => ship.position.push(randomPosition + index)) // Populates position variable in ship.
         }
     }
 
-    // TODO: Check if functioning. What if undefined.
     // Find which ship is occupying a particular position. 
     const findShipFromPosition = (ships, pos) => {
         return ships.find(ship => {
@@ -123,10 +130,14 @@ const gameboardFactory = () => {
         })
     }
 
+    // TODO: Could possible move this to hit() function in ship objects.
+    // Find which ship index corresponds to particular position. 
     const findIndexFromPosition = (ship, pos) => {
         return ship.position.indexOf(pos)
     }
 
+    // TODO: Need to handle hit and set gameboard[hitPosition].hit = true even if no ship. Terrible Logic.
+    // Takes gameboard square as an ID, and passes hit to ship if it exists.
     const receiveAttack = (ships, hitPosition) => {
         let ship
         let index
@@ -148,6 +159,7 @@ const gameboardFactory = () => {
     return {
         gameboard,
         initGameboard,
+        clickHandler,
         displayArrayHit,
         displayArrayId,
         displayArrayOccupied,

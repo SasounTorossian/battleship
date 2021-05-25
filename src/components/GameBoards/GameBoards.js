@@ -2,7 +2,6 @@ import React from 'react'
 import './Gameboards.css'
 
 const Gameboards = ({ players }) => {
-    console.log(players);
     return (
         <div className="Gameboards">
             <Gameboard player={players[0]} />
@@ -12,10 +11,23 @@ const Gameboards = ({ players }) => {
 }
 
 const Gameboard = ({ player }) => {
-    let gameboard = player.fleet.gameboard
+    let gameboard = player.gameboard
 
     return (
         <div className="Gameboard">
+            {
+                gameboard.gameboard.map(square => {
+                    return (
+                        <div 
+                            className={`gamesquare gamesquare-${square.ship.type}`} 
+                            key={square.id}
+                            onClick={(e) => gameboard.clickHandler(e, square.id)}
+                        >
+
+                        </div>
+                    )
+                })
+            }
         </div>
     )
 }

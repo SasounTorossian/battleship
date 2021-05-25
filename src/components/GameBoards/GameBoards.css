@@ -2,10 +2,42 @@
     background-color: red;
     height: 100%;
     width: 100%;
+    padding: 50px 0;
+    display: flex;
+    justify-content: space-around;
 }
 
 .Gameboard {
     background-color: white;
     width: 400px;
     height: 400px;
+    display: flex;
+    flex-wrap: wrap;
 }
+
+.gamesquare {
+    background-color: blue;
+    width: 40px;
+    height: 40px;
+}
+
+.gamesquare-Destroyer {
+    background-color: coral;
+}
+
+.gamesquare-Submarine {
+    background-color: brown;
+}
+
+.gamesquare-Cruiser {
+    background-color: aqua;
+}
+
+.gamesquare-Battleship {
+    background-color: gray;
+}
+
+.gamesquare-Carrier {
+    background-color: greenyellow;
+}
+
