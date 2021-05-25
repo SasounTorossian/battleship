@@ -9,7 +9,7 @@ const fleetFactory = () => {
                 [0, 10]
             ],
             hit(segment) {
-                if(segment < this.position.length) { // What if segment doesn't exist? 
+                if(segment < this.position.length) {
                     this.position[segment] = "X"
                 }
             },
