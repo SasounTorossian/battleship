@@ -1,5 +1,3 @@
-import fleetFactory from "../fleetFactory/fleetFactory"
-
 const gameboardFactory = () => {
 
     let gameboard = []
@@ -99,6 +97,7 @@ const gameboardFactory = () => {
         fleet.forEach(ship => placeShip(ship))
     }
 
+    // NOTE: Replace testPosition and testOrientation with mock functions in Jest.
     // Places each ship object on the gameboard according to its parameters.
     const placeShip = (ship, testPosition = false, testOrientation = false) => {
 
@@ -122,9 +121,11 @@ const gameboardFactory = () => {
             placeShip(ship) // recursively call function to properly place ship.
         }
         else {
-            currentShipOrientation.forEach(index => gameboard[randomPosition + index].occupied = true) // Populate gameboard.
-            currentShipOrientation.forEach(index => gameboard[randomPosition + index].ship = ship) // Populate gameboard.
-            currentShipOrientation.forEach(index => ship.position.push(randomPosition + index)) // Populates position variable in ship.
+            currentShipOrientation.forEach(index => {
+                gameboard[randomPosition + index].occupied = true // Populate gameboard occupied variable.
+                gameboard[randomPosition + index].ship = ship // Populate gameboard ship variable.
+                ship.position.push(randomPosition + index) // Populates position variable in ship.
+            }) 
         }
     }
 
