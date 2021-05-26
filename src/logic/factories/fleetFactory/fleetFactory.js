@@ -1,19 +1,13 @@
 const fleetFactory = () => {
 
     // Takes segment and marks it as hit.
-    function hit(segment) {
-        this.position[segment] = "X"
-    }
+    function hit(segment) { this.position[segment] = "X" }
 
     // Checks all segments in position to see if ship is fully sunk.
-    function isSunk() {
-        return !!this.position.length && this.position.every(segment => segment === "X")
-    }
+    function isSunk() { return !!this.position.length && this.position.every(segment => segment === "X") }
 
     // Checks if all ships in the fleet are sunk.
-    const checkIfShipsSunk = () => {
-        return ships.every(ship => ship.isSunk())
-    }
+    const checkIfAllShipsSunk = () => { return ships.every(ship => ship.isSunk()) }
 
     const ships = [
         {
@@ -70,7 +64,7 @@ const fleetFactory = () => {
 
     return {
         ships,
-        checkIfShipsSunk,
+        checkIfAllShipsSunk,
     }
 
 } 

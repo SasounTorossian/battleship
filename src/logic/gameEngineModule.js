@@ -27,13 +27,13 @@ const gameEngineModule = () => {
 
     const checkGameOver = () => {
         return players.some(player => {
-            player.fleet.checkIfShipsSunk()
+            player.fleet.checkIfAllShipsSunk()
         })
     }
 
     const checkWhoWon = () => {
-        if(players[0].fleet.checkIfShipsSunk()) return 0
-        else if(players[1].fleet.checkIfShipsSunk()) return 1
+        if(players[0].fleet.checkIfAllShipsSunk()) return 0
+        else if(players[1].fleet.checkIfAllShipsSunk()) return 1
     }
 
     return {

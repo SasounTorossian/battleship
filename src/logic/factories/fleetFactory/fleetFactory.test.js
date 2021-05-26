@@ -58,3 +58,40 @@ test('test if entire ship is damaged, isSunk() function returns true', () => {
     expect(carrier.position).toStrictEqual(["X", "X", "X", "X", "X"])
     expect(carrier.isSunk()).toBe(true)
 })
+
+test('test if checkIfAllShipsSunk() returns false if only one ship sunk.', () => {
+    let fleet = fleetFactory()
+    let carrier = fleet.ships[4]
+    carrier.position = [5, 15, 25, 35, 45]
+    carrier.hit(0) 
+    carrier.hit(1) 
+    carrier.hit(2) 
+    carrier.hit(3) 
+    carrier.hit(4) 
+    expect(carrier.position).toStrictEqual(["X", "X", "X", "X", "X"])
+    expect(carrier.isSunk()).toBe(true)
+    expect(fleet.checkIfAllShipsSunk()).toBe(false)
+})
+
+test('test if checkIfAllShipsSunk() returns true if only all ships sunk.', () => {
+    let fleet = fleetFactory()
+    let destroyer = fleet.ships[0]
+    let submarine = fleet.ships[1]
+    let cruiser = fleet.ships[2]
+    let battleship = fleet.ships[3]
+    let carrier = fleet.ships[4]
+
+    destroyer.position = [0, 1]
+    submarine.position = [10, 11, 12]
+    cruiser.position = [20, 21, 22]
+    battleship.position = [30, 31, 32, 33]
+    carrier.position = [40, 41, 42, 43, 44]
+
+    fleet.ships.forEach(ship => {
+        ship.position.forEach((pos, idx) => {
+            ship.hit(idx)
+        })
+    })
+
+    expect(fleet.checkIfAllShipsSunk()).toBe(true)
+})
