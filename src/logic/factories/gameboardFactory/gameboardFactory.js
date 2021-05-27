@@ -1,3 +1,5 @@
+import gameEngine from "../../gameEngine"
+
 const gameboardFactory = () => {
 
     let gameboard = []
@@ -24,6 +26,7 @@ const gameboardFactory = () => {
         console.log(ships);
         console.log(squareID);
         receiveAttack(ships, squareID)
+        gameEngine.updateApp()
     }
 
     // Displays gameboard 1D array as 2D array of hits. 
@@ -157,7 +160,6 @@ const gameboardFactory = () => {
             let ship = findShipFromPosition(ships, hitPosition)
             let index = findIndexFromPosition(ship, hitPosition)
             ship.hit(index)
-            //TODO: Need to call gameEngine here to progress game.
         }
     }
 
