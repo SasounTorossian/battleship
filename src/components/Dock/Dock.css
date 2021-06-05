@@ -4,6 +4,10 @@
     width: 100%;
 }
 
+.ship {
+    cursor: pointer;
+}
+
 .destroyer-container {
     height: 40px;
     width: 80px;

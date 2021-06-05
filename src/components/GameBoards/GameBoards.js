@@ -1,26 +1,29 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import './Gameboards.css'
 
-const Gameboards = ({ players }) => {
+const Gameboards = React.forwardRef(({ players }, boardRef) => {
+    // console.log(ref);
     return (
         <div className="Gameboards">
-            <Gameboard player={players[0]} />
-            <Gameboard player={players[1]} />
+            <Gameboard player={players[0]} humanPlayer={ true } ref={boardRef}/>
+            <Gameboard player={players[1]} humanPlayer={ false }/>
         </div>
     )
-}
+})
 
-const Gameboard = ({ player }) => {
+
+const Gameboard = React.forwardRef(({ player, humanPlayer }, boardRef) => {
+    
     let gameboard = player.gameboard
     let ships = player.fleet.ships
 
     return (
-        <div className="Gameboard">
+        <div className="Gameboard" ref={boardRef}>
             {
                 gameboard.gameboard.map(square => {
                     return (
                         <div 
-                            className={`gamesquare gamesquare-${square.ship.type}`} 
+                            className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
                             key={square.id}
                             onClick={(e) => gameboard.clickHandler(e, ships, square.id)}
                         >
@@ -31,6 +34,6 @@ const Gameboard = ({ player }) => {
             }
         </div>
     )
-}
+})
 
 export default Gameboards

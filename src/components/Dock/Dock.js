@@ -1,9 +1,9 @@
 import React from 'react'
 import './Dock.css'
 
-const Dock = () => {
+const Dock = React.forwardRef((props, shipRef) => {
     return (
-        <div className="FleetDock">
+        <div className="FleetDock" ref={shipRef}>
             <div className={`ship destroyer-container`} draggable={true}>
                 <div id="destroyer-0"></div>
                 <div id="destroyer-1"></div>
@@ -37,6 +37,6 @@ const Dock = () => {
             </div>
         </div>
     )
-}
+})
 
 export default Dock

@@ -157,8 +157,8 @@ const gameboardFactory = () => {
         }
         else {
             gameboard[hitPosition].hit = true
-            let ship = findShipFromPosition(ships, hitPosition)
-            let index = findIndexFromPosition(ship, hitPosition)
+            let ship = findShipFromPosition(ships, hitPosition) // NOTE: Could maybe check the gameboard array instead to find which ship it is.
+            let index = findIndexFromPosition(ship, hitPosition) 
             ship.hit(index)
         }
     }
