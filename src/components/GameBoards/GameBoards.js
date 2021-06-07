@@ -24,6 +24,7 @@ const Gameboard = React.forwardRef(({ player, humanPlayer }, boardRef) => {
                     return (
                         <div 
                             className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
+                            data-id={square.id}
                             key={square.id}
                             onClick={(e) => gameboard.clickHandler(e, ships, square.id)}
                         >

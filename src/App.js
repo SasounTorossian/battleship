@@ -58,7 +58,6 @@ function App() {
     <div className="App">
       <Header />
       { players.length > 0 && <Gameboards players={players} ref={boardRef}/> }
-      {/* <Gameboards players={players} ref={boardRef}/> */}
       <Dock ref={shipRef}/>
     </div>
   );

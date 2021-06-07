@@ -11,7 +11,8 @@ const fleetFactory = () => {
 
     const ships = [
         {
-            type: "Destroyer",
+            type: "destroyer",
+            length: 2,
             position: [],
             orientation: [
                 [0, 1],
@@ -21,7 +22,8 @@ const fleetFactory = () => {
             isSunk: isSunk,
         },
         {
-            type: "Submarine",
+            type: "submarine",
+            length: 3,
             position: [],
             orientation: [
                 [0, 1, 2],
@@ -31,7 +33,8 @@ const fleetFactory = () => {
             isSunk: isSunk,
         },
         {
-            type: "Cruiser",
+            type: "cruiser",
+            length: 3,
             position: [],
             orientation: [
                 [0, 1, 2],
@@ -41,7 +44,8 @@ const fleetFactory = () => {
             isSunk: isSunk,
         },
         {
-            type: "Battleship",
+            type: "battleship",
+            length: 4,
             position: [],
             orientation: [
                 [0, 1, 2, 3],
@@ -51,7 +55,8 @@ const fleetFactory = () => {
             isSunk: isSunk,
         },
         {
-            type: "Carrier",
+            type: "carrier",
+            length: 5,
             position: [],
             orientation: [
                 [0, 1, 2, 3, 4],
