@@ -15,7 +15,14 @@ function App() {
  
  const boardRef = useRef(null)
  const shipRef = useRef(null)
+
+ const handlePlayerShipPlacement = (players) => {
+   console.log(players);
+  setPlayers(players)
+  console.log(players);
+ }
  
+ // TODO: Can pass setPlayers hook directly, no need for a handler.
  const handlePlayerChange = () => {
    setPlayers(gameEngine.getPlayers())
  }
@@ -30,9 +37,11 @@ function App() {
     setCurrentPlayer(gameEngine.getCurrentPlayer())
   }, [])
 
+  // TODO: will get called everytime player places ships.
   // TODO: More efficient way of handling next turn. Perhaps put it all in one function in gameEngine.
   // Called when next turn occurs
   useEffect(() => {
+    console.log("NEXT TURN");
     gameEngine.nextPlayerTurn()
     setCurrentPlayer(gameEngine.getCurrentPlayer())
 
@@ -47,7 +56,7 @@ function App() {
   useEffect(() => {
     if(boardRef.current !== null && shipRef.current !== null) {
       console.log("refs ready");
-      dragAndDrop.initializeDragAndDrop(boardRef, shipRef)
+      dragAndDrop.initializeDragAndDrop(boardRef, shipRef, players, handlePlayerShipPlacement)
     }
   })
 

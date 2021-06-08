@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import './Gameboards.css'
 
 const Gameboards = React.forwardRef(({ players }, boardRef) => {
-    // console.log(ref);
     return (
         <div className="Gameboards">
             <Gameboard player={players[0]} humanPlayer={ true } ref={boardRef}/>
