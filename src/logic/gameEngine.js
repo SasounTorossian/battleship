@@ -1,19 +1,24 @@
 import playerFactory from "./factories/playerFactory/playerFactory"
 
 const gameEngine = (() => {
-    let AppPlayerUpdateFunction
+    let setPlayersInternal
     let players = []
     let currentPlayer = 0
     
     // Allows App.js to pass handler function to gameEngine. 
     // Similar to how App.js would pass a handler function down to a child component.
-    const initializeAppPlayerUpdate = (func) => {
-        AppPlayerUpdateFunction = func
+    const initializeSetPlayers = (setPlayers) => {
+        setPlayersInternal = setPlayers
+    }
+
+    const updateHumanPlayer = (player) => {
+        players[0] = player
     }
 
     // Call passed App.js handler function.
-    const updateApp = () => {
-        AppPlayerUpdateFunction(players)
+    const updatePlayersState = () => {
+        const tempPlayers = [...players]
+        setPlayersInternal(tempPlayers)
     }
 
     // Initialized player and AI with chosen player name.
@@ -58,8 +63,9 @@ const gameEngine = (() => {
     }
 
     return {
-        initializeAppPlayerUpdate,
-        updateApp,
+        updateHumanPlayer,
+        initializeSetPlayers,
+        updatePlayersState,
         initializePlayers,
         initializePlayersGameboard,
         placeAIShips,

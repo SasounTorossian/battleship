@@ -19,6 +19,11 @@ const gameboardFactory = () => {
         return gameboard
     }
 
+    const shipDragAndDropHandler = (player) => {
+        console.log(player.fleet.ships);
+        gameEngine.updatePlayersState()
+    }
+
     // Handles oncoming clicks on the gameboard.
     const clickHandler = (e, ships, squareID) => {
         //NOTE: based on e.target.ship.type, have different sound effects play?
@@ -26,7 +31,7 @@ const gameboardFactory = () => {
         console.log(ships);
         console.log(squareID);
         receiveAttack(ships, squareID)
-        gameEngine.updateApp()
+        gameEngine.updatePlayersState()
     }
 
     // Displays gameboard 1D array as 2D array of hits. 
@@ -166,6 +171,7 @@ const gameboardFactory = () => {
     return {
         gameboard,
         initGameboard,
+        shipDragAndDropHandler,
         clickHandler,
         displayArrayHit,
         displayArrayId,

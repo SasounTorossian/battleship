@@ -71,6 +71,8 @@ const dragAndDrop = (() => {
             shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndex + index) // Populates position variable in ship.
         }) 
 
+
+
         // TODO: Need to send player back up to App.js for re-render
         // TODO: Remove from dock
         // TODO: populate gamesquare object on player. 

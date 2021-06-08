@@ -1,8 +1,7 @@
 import './App.css';
-import React, {useState, useEffect, useRef, useComponentWillMount } from "react"
+import React, {useState, useEffect, useRef, useComponentWillMount, useLayoutEffect } from "react"
 import Header from "./components/Header/Header"
-import Gameboards from "./components/Gameboards/Gameboards"
-import Dock from "./components/Dock/Dock"
+import GameArea from "./components/GameArea/GameArea"
 import gameEngine from "./logic/gameEngine"
 import dragAndDrop from "./logic/dragAndDrop/dragAndDrop"
 
@@ -12,24 +11,10 @@ function App() {
  const [currentPlayer, setCurrentPlayer] = useState(0) // 0 = player, 1 = AI
  const [gameOver, setGameOver] = useState(false)
  const [winningPlayer, setWinningPlayer] = useState(0)
- 
- const boardRef = useRef(null)
- const shipRef = useRef(null)
-
- const handlePlayerShipPlacement = (players) => {
-   console.log(players);
-  setPlayers(players)
-  console.log(players);
- }
- 
- // TODO: Can pass setPlayers hook directly, no need for a handler.
- const handlePlayerChange = () => {
-   setPlayers(gameEngine.getPlayers())
- }
 
  // Initial game setup.
  useEffect(() => {
-    gameEngine.initializeAppPlayerUpdate(handlePlayerChange)
+    gameEngine.initializeSetPlayers(setPlayers)
     gameEngine.initializePlayers("John Doe", "Admiral Akbar")
     gameEngine.initializePlayersGameboard()
     gameEngine.placeAIShips()
@@ -37,11 +22,10 @@ function App() {
     setCurrentPlayer(gameEngine.getCurrentPlayer())
   }, [])
 
-  // TODO: will get called everytime player places ships.
+  // TODO: will get called everytime player places ships. Need to prevent it on drag and drop.
   // TODO: More efficient way of handling next turn. Perhaps put it all in one function in gameEngine.
   // Called when next turn occurs
   useEffect(() => {
-    console.log("NEXT TURN");
     gameEngine.nextPlayerTurn()
     setCurrentPlayer(gameEngine.getCurrentPlayer())
 
@@ -53,12 +37,12 @@ function App() {
   }, [players])
 
   // Initialize drag and drop functionality
-  useEffect(() => {
-    if(boardRef.current !== null && shipRef.current !== null) {
-      console.log("refs ready");
-      dragAndDrop.initializeDragAndDrop(boardRef, shipRef, players, handlePlayerShipPlacement)
-    }
-  })
+  // useEffect(() => {
+  //   if(boardRef.current !== null && shipRef.current !== null) {
+  //     console.log("refs ready");
+  //     dragAndDrop.initializeDragAndDrop(boardRef, shipRef, players, handlePlayerShipPlacement)
+  //   }
+  // })
 
   // TODO: new component for game over screen.
   // TODO: Should be passing current Player to gameboard to prevent clicking on own gameboard.
@@ -66,8 +50,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      { players.length > 0 && <Gameboards players={players} ref={boardRef}/> }
-      <Dock ref={shipRef}/>
+      { players.length > 0 && <GameArea players={players} key={players}/> }
     </div>
   );
 }
