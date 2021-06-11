@@ -37,7 +37,7 @@ const GameArea = ({ players }) => {
         // draggedShipLength = draggedShip.childNodes.length
     }
 
-    // TODO: Use to highlight where object would be. (Need future position too)
+    // TODO: Use to highlight where object would be. (Need future position too depending if horizontal or vertical)
     const dragEnter = (e) => {
         e.preventDefault()
         // console.log("drag enter");
@@ -65,21 +65,31 @@ const GameArea = ({ players }) => {
         // NOTE: Need to FULLLLLYYYYY understand what's going on here instead of hacking it together.
         // NOTE: Have single function to handle all of this in the gameEngine
         let humanPlayer = players[0]
-        let shipNameWithLastId = draggedShip.lastChild.id
-        let shipClass = shipNameWithLastId.slice(0, -2)
-        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1))
-        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id)
-        let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1))
-        shipLastId = shipLastId - selectedShipIndex // TODO: Will need to check overflow (horizontal and vertical)
+        let shipNameWithLastId = draggedShip.lastChild.id // destroyer-0
+        let shipClass = shipNameWithLastId.slice(0, -2) // destroyer
+        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 0
+        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square.
+        let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected 
+        shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship.
+        // TODO: Will need to check overflow (horizontal and vertical)
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
 
-        shipOrientation.forEach(index => {
-            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].occupied = true  // Populate gameboard occupied variable.
-            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].ship = shipObject // Populate gameboard ship variable.
-            shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndex + index) // Populates position variable in ship.
-        }) 
+        if(horizontal) {
+            shipOrientation.forEach(index => {
+                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].occupied = true  // Populate gameboard occupied variable.
+                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].ship = shipObject // Populate gameboard ship variable.
+                shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndex + index) // Populates position variable in ship.
+            }) 
+        }
+        else {
+            shipOrientation.forEach(index => {
+                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index].occupied = true  // Populate gameboard occupied variable.
+                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index].ship = shipObject // Populate gameboard ship variable.
+                shipObject.position.push(parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index) // Populates position variable in ship.
+            }) 
+        }
 
         gameEngine.updateHumanPlayer(humanPlayer)
         gameEngine.updatePlayersState()

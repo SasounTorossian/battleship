@@ -158,6 +158,7 @@ const gameboardFactory = () => {
         return ship.position.indexOf(pos)
     }
 
+    // NOTE: Could move all of this handling into gameEngine.
     // Takes gameboard square as an ID, and passes hit to ship if it exists.
     const receiveAttack = (ships, hitPosition) => {
         
