@@ -1,14 +1,25 @@
-import React, { useState} from 'react'
+import React, { useLayoutEffect, useState} from 'react'
 import './GameArea.css'
 import './Dock.css'
 import gameEngine from "../../logic/gameEngine"
 import gameboardFactory from '../../logic/factories/gameboardFactory/gameboardFactory'
 
 const GameArea = ({ players }) => {
-    console.log(players);
-    const [horizontal, setHorizontal] = useState(false)
+    const [horizontal, setHorizontal] = useState(true)
 
-    const handleClick = () => { setHorizontal(!horizontal) }
+    const handleHorizontal = () => { setHorizontal(!horizontal) }
+
+    const handleReset = () => {
+        let humanPlayer = players[0]
+        humanPlayer.fleet.ships.forEach(ship => {
+            ship.position = []
+        })
+
+        humanPlayer.gameboard.clearBoard()
+        humanPlayer.gameboard.initGameboard()
+        gameEngine.updateHumanPlayer(humanPlayer)
+        gameEngine.updatePlayersState()
+    }
 
     let selectedShipNameWithIndex
     let draggedShip
@@ -29,29 +40,30 @@ const GameArea = ({ players }) => {
     // TODO: Use to highlight where object would be. (Need future position too)
     const dragEnter = (e) => {
         e.preventDefault()
-        console.log("drag enter");
+        // console.log("drag enter");
     }
 
 
     const dragOver = (e) => {
         e.preventDefault()
-        console.log("drag over");
+        // console.log("drag over");
     }
 
     // TODO: Remove hightlight.
     const dragLeave = (e) => {
         // Not needed?
-        console.log("drag leave");
+        // console.log("drag leave");
     }
 
     // TODO: Might not have any need
     const dragEnd = (e) => {
-        console.log("drag end");
+        // console.log("drag end");
     }
 
     const dragDrop = (e) => {
         console.log("DROPPED");
         // NOTE: Need to FULLLLLYYYYY understand what's going on here instead of hacking it together.
+        // NOTE: Have single function to handle all of this in the gameEngine
         let humanPlayer = players[0]
         let shipNameWithLastId = draggedShip.lastChild.id
         let shipClass = shipNameWithLastId.slice(0, -2)
@@ -59,7 +71,6 @@ const GameArea = ({ players }) => {
         let shipLastId = lastShipIndex + parseInt(e.target.dataset.id)
         let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1))
         shipLastId = shipLastId - selectedShipIndex // TODO: Will need to check overflow (horizontal and vertical)
-        let horizontal = true // TODO: create horizonta and vertical button.
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
@@ -87,7 +98,10 @@ const GameArea = ({ players }) => {
                 dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
-            <Control handleClick={handleClick}/>
+            <Control 
+                handleHorizontal={handleHorizontal}
+                handleReset={handleReset}
+            />
             <Dock 
                 playerShips={players[0].fleet.ships} 
                 horizontal={horizontal}
@@ -123,7 +137,6 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
     
     let gameboard = player.gameboard
     let ships = player.fleet.ships
-
     return (
         <div className="Gameboard">
             {
@@ -133,7 +146,7 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
                             className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
                             data-id={square.id}
                             key={square.id}
-                            onClick={(e) => gameboard.clickHandler(e, ships, square.id)}
+                            onClick={(e) => gameboard.clickHandler(e, ships, square.id)} // NOTE: Could be better to call gameEngine.
                             onDragEnter={dragEnter}
                             onDragOver={dragOver}
                             onDragLeave={dragLeave}
@@ -150,12 +163,14 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
 }
 
 //TODO: Reset
-// TODO: Change horizontal
-const Control = ({ handleClick }) => {
+const Control = ({ handleHorizontal, handleReset }) => {
     return (
         <div className="Control">
-            <button onClick={handleClick}>
+            <button onClick={handleHorizontal}>
                 Change Orientation
+            </button>
+            <button onClick={handleReset}>
+                Reset Ship Positions
             </button>
         </div>
     )

@@ -19,6 +19,7 @@ const gameboardFactory = () => {
         return gameboard
     }
 
+    // NOTE: Should probably be handled from gameEngine. instead of calling gameEngine from gameboard.
     const shipDragAndDropHandler = (player) => {
         console.log(player.fleet.ships);
         gameEngine.updatePlayersState()
@@ -32,6 +33,13 @@ const gameboardFactory = () => {
         console.log(squareID);
         receiveAttack(ships, squareID)
         gameEngine.updatePlayersState()
+    }
+
+    const clearBoard = () => { gameboard.length = 0 }
+
+    const getBoard = () => {
+        console.log(gameboard);
+        return gameboard
     }
 
     // Displays gameboard 1D array as 2D array of hits. 
@@ -170,6 +178,8 @@ const gameboardFactory = () => {
 
     return {
         gameboard,
+        clearBoard,
+        getBoard,
         initGameboard,
         shipDragAndDropHandler,
         clickHandler,

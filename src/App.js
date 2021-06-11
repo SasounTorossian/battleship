@@ -26,6 +26,7 @@ function App() {
   // TODO: More efficient way of handling next turn. Perhaps put it all in one function in gameEngine.
   // Called when next turn occurs
   useEffect(() => {
+    console.log("player updated");
     gameEngine.nextPlayerTurn()
     setCurrentPlayer(gameEngine.getCurrentPlayer())
 

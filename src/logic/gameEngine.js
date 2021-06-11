@@ -14,7 +14,7 @@ const gameEngine = (() => {
     const updateHumanPlayer = (player) => {
         players[0] = player
     }
-
+    
     // Call passed App.js handler function.
     const updatePlayersState = () => {
         const tempPlayers = [...players]
