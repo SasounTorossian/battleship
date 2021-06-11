@@ -36,21 +36,13 @@ function App() {
     
   }, [players])
 
-  // Initialize drag and drop functionality
-  // useEffect(() => {
-  //   if(boardRef.current !== null && shipRef.current !== null) {
-  //     console.log("refs ready");
-  //     dragAndDrop.initializeDragAndDrop(boardRef, shipRef, players, handlePlayerShipPlacement)
-  //   }
-  // })
-
   // TODO: new component for game over screen.
   // TODO: Should be passing current Player to gameboard to prevent clicking on own gameboard.
   // NOTE: current player could also be used in PvP to know who's screen to obscure. 
   return (
     <div className="App">
       <Header />
-      { players.length > 0 && <GameArea players={players} key={players}/> }
+      { players.length > 0 && <GameArea players={players}/> }
     </div>
   );
 }

@@ -22,31 +22,37 @@ const GameArea = ({ players }) => {
         // draggedShipLength = draggedShip.childNodes.length
     }
 
+    // TODO: Use to highlight where object would be. (Need future position too)
     const dragEnter = (e) => {
         e.preventDefault()
+        console.log("enter");
     }
+
 
     const dragOver = (e) => {
         e.preventDefault()
     }
 
+    // TODO: Remove hightlight.
     const dragLeave = (e) => {
         // Not needed?
     }
 
+    // TODO: Might not have any need
     const dragEnd = (e) => {
-
+        console.log("end");
     }
 
     const dragDrop = (e) => {
         console.log("DROPPED");
+        // NOTE: Need to FULLLLLYYYYY understand what's going on here instead of hacking it together.
         let humanPlayer = players[0]
         let shipNameWithLastId = draggedShip.lastChild.id
         let shipClass = shipNameWithLastId.slice(0, -2)
         let lastShipIndex = parseInt(shipNameWithLastId.substr(-1))
         let shipLastId = lastShipIndex + parseInt(e.target.dataset.id)
         let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1))
-        shipLastId = shipLastId - selectedShipIndex // TODO: Will need to check overflow
+        shipLastId = shipLastId - selectedShipIndex // TODO: Will need to check overflow (horizontal and vertical)
         let horizontal = true
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
@@ -62,7 +68,7 @@ const GameArea = ({ players }) => {
         gameEngine.updatePlayersState()
 
         // TODO: Clean up variables.
-        // TODO: Remove from dock
+        // TODO: Delete original drag and drop file.  
     }
 
 
@@ -79,6 +85,7 @@ const GameArea = ({ players }) => {
                 dragDrop={dragDrop}
             />
             <Dock 
+                playerShips={players[0].fleet.ships} 
                 mouseDown={mouseDown}
                 dragStart={dragStart}
             />
@@ -137,40 +144,27 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
     )
 }
 
-const Dock = ({ mouseDown,  dragStart}) => {
+const Dock = ({ playerShips, mouseDown,  dragStart}) => {
     return (
         <div className="FleetDock">
-            <div className={`ship destroyer-container`} draggable={true} onMouseDown={mouseDown} onDragStart={dragStart}>
-                <div className="ship-segment" id="destroyer-0"></div>
-                <div className="ship-segment" id="destroyer-1"></div>
-            </div>
-
-            <div className={`ship submarine-container`} draggable={true} onMouseDown={mouseDown} onDragStart={dragStart}>
-                <div className="ship-segment" id="submarine-0"></div>
-                <div className="ship-segment" id="submarine-1"></div>
-                <div className="ship-segment" id="submarine-2"></div>
-            </div>
-
-            <div className={`ship cruiser-container`} draggable={true} onMouseDown={mouseDown} onDragStart={dragStart}>
-                <div className="ship-segment" id="cruiser-0"></div>
-                <div className="ship-segment" id="cruiser-1"></div>
-                <div className="ship-segment" id="cruiser-2"></div>
-            </div>
-
-            <div className={`ship battleship-container`} draggable={true} onMouseDown={mouseDown} onDragStart={dragStart}>
-                <div className="ship-segment" id="battleship-0"></div>
-                <div className="ship-segment" id="battleship-1"></div>
-                <div className="ship-segment" id="battleship-2"></div>
-                <div className="ship-segment" id="battleship-3"></div>
-            </div>
-
-            <div className={`ship carrier-container`} draggable={true} onMouseDown={mouseDown} onDragStart={dragStart}>
-                <div className="ship-segment" id="carrier-0"></div>
-                <div className="ship-segment" id="carrier-1"></div>
-                <div className="ship-segment" id="carrier-2"></div>
-                <div className="ship-segment" id="carrier-3"></div>
-                <div className="ship-segment" id="carrier-5"></div>
-            </div>
+            {playerShips.map(ship => {
+                if(ship.position.length === 0) {
+                    return (
+                        <div 
+                            className={`ship ${ship.type}-container`} 
+                            draggable={true} 
+                            onMouseDown={mouseDown} 
+                            onDragStart={dragStart}
+                        >
+                            {ship.orientation[0].map(idx => {
+                                return (
+                                    <div className="ship-segment" id={`${ship.type}-${idx}`}></div>
+                                )
+                            })}
+                        </div>
+                    )
+                }
+            })}
         </div>
     )
 }
