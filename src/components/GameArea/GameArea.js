@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState} from 'react'
 import './GameArea.css'
 import './Dock.css'
 import gameEngine from "../../logic/gameEngine"
@@ -6,6 +6,10 @@ import gameboardFactory from '../../logic/factories/gameboardFactory/gameboardFa
 
 const GameArea = ({ players }) => {
     console.log(players);
+    const [horizontal, setHorizontal] = useState(false)
+
+    const handleClick = () => { setHorizontal(!horizontal) }
+
     let selectedShipNameWithIndex
     let draggedShip
     // let draggedShipLength
@@ -25,22 +29,24 @@ const GameArea = ({ players }) => {
     // TODO: Use to highlight where object would be. (Need future position too)
     const dragEnter = (e) => {
         e.preventDefault()
-        console.log("enter");
+        console.log("drag enter");
     }
 
 
     const dragOver = (e) => {
         e.preventDefault()
+        console.log("drag over");
     }
 
     // TODO: Remove hightlight.
     const dragLeave = (e) => {
         // Not needed?
+        console.log("drag leave");
     }
 
     // TODO: Might not have any need
     const dragEnd = (e) => {
-        console.log("end");
+        console.log("drag end");
     }
 
     const dragDrop = (e) => {
@@ -53,7 +59,7 @@ const GameArea = ({ players }) => {
         let shipLastId = lastShipIndex + parseInt(e.target.dataset.id)
         let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1))
         shipLastId = shipLastId - selectedShipIndex // TODO: Will need to check overflow (horizontal and vertical)
-        let horizontal = true
+        let horizontal = true // TODO: create horizonta and vertical button.
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
@@ -71,9 +77,6 @@ const GameArea = ({ players }) => {
         // TODO: Delete original drag and drop file.  
     }
 
-
-
-
     return (
         <div className="GameArea">
             <Gameboards 
@@ -84,8 +87,10 @@ const GameArea = ({ players }) => {
                 dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
+            <Control handleClick={handleClick}/>
             <Dock 
                 playerShips={players[0].fleet.ships} 
+                horizontal={horizontal}
                 mouseDown={mouseDown}
                 dragStart={dragStart}
             />
@@ -144,14 +149,26 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
     )
 }
 
-const Dock = ({ playerShips, mouseDown,  dragStart}) => {
+//TODO: Reset
+// TODO: Change horizontal
+const Control = ({ handleClick }) => {
+    return (
+        <div className="Control">
+            <button onClick={handleClick}>
+                Change Orientation
+            </button>
+        </div>
+    )
+}
+
+const Dock = ({ playerShips, horizontal, mouseDown,  dragStart}) => {
     return (
         <div className="FleetDock">
             {playerShips.map(ship => {
                 if(ship.position.length === 0) {
                     return (
                         <div 
-                            className={`ship ${ship.type}-container`} 
+                            className={`ship ${ship.type}-container-${horizontal ? "horizontal" : "vertical"}`} 
                             draggable={true} 
                             onMouseDown={mouseDown} 
                             onDragStart={dragStart}
