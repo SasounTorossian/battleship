@@ -27,25 +27,27 @@ const GameArea = ({ players }) => {
     let draggedShip
     let draggedShipLength
     let selectedShipIndexMultipler
+
+    const clearAllHighlights = () => {
+        document.querySelectorAll(".user-gamesquare").forEach(square => {
+            square.classList.remove("highlight")
+        })
+    }
     
     const mouseDown = (e) => {
-        console.log(e.target);
         selectedShipNameWithIndex = e.target.id
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected 
         selectedShipIndexMultipler = selectedShipIndex * (horizontal ? 1 : 10)
     }
 
     const dragStart = (e) => {
-        console.log(e.target);
         draggedShip = e.target
         draggedShipLength = draggedShip.childNodes.length
     }
 
     const dragEnter = (e) => {
         e.preventDefault()
-        document.querySelectorAll(".user-gamesquare").forEach(square => {
-            square.classList.remove("highlight")
-        })
+        clearAllHighlights()
         for(let i=0; i < draggedShipLength; i++) {
             let indexMultiplier = i * (horizontal ? 1 : 10)
             let highlightedElement = document.querySelector(`[data-id='${parseInt(e.target.dataset.id) - selectedShipIndexMultipler + indexMultiplier}']`)
@@ -53,29 +55,18 @@ const GameArea = ({ players }) => {
         }
     }
 
-    // TODO: Leave removing highlight behind it as mouse cursor moves in orientation of ship.
+    // NOTE: Not Needed
     const dragLeave = (e) => {
         e.preventDefault()
-        // for(let i=0; i < draggedShipLength; i++) {
-        //     let indexMultiplier = i * (horizontal ? 1 : 10)
-        //     let deHighlightedElement = document.querySelector(`[data-id='${parseInt(e.target.dataset.id) - selectedShipIndexMultipler + indexMultiplier}']`)
-        //     if(deHighlightedElement !== null) {
-        //         if(deHighlightedElement.classList.contains("highlight")) {
-        //             deHighlightedElement.classList.remove("highlight")
-        //         }
-        //     }
-        // }
     }
 
+    // NOTE: Not Needed
     const dragOver = (e) => {
         e.preventDefault()
-        // console.log("drag over");
     }
 
-
-    // TODO: Might not have any need
     const dragEnd = (e) => {
-        // console.log("drag end");
+        clearAllHighlights()
     }
 
     const dragDrop = (e) => {
@@ -112,7 +103,6 @@ const GameArea = ({ players }) => {
                 dragEnter={dragEnter}
                 dragOver={dragOver}
                 dragLeave={dragLeave}
-                dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
             <Control 
@@ -124,13 +114,14 @@ const GameArea = ({ players }) => {
                 horizontal={horizontal}
                 mouseDown={mouseDown}
                 dragStart={dragStart}
+                dragEnd={dragEnd}
             />
         </div>
     )
 }
 
 // NOTE: Do I even need a humanPlayer?
-const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragEnd, dragDrop }) => {
+const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
     return (
         <div className="Gameboards">
             <Gameboard 
@@ -139,7 +130,6 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragEnd, dragDrop
                 dragEnter={dragEnter}
                 dragOver={dragOver}
                 dragLeave={dragLeave}
-                dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
             <Gameboard 
@@ -151,7 +141,7 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragEnd, dragDrop
 }
 
 
-const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEnd, dragDrop }) => {
+const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDrop }) => {
     
     let gameboard = player.gameboard
     let ships = player.fleet.ships
@@ -168,7 +158,6 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
                             onDragEnter={dragEnter}
                             onDragOver={dragOver}
                             onDragLeave={dragLeave}
-                            onDragEnd={dragEnd}
                             onDrop={dragDrop}
                         >
 
@@ -193,7 +182,7 @@ const Control = ({ handleHorizontal, handleReset }) => {
     )
 }
 
-const Dock = ({ playerShips, horizontal, mouseDown,  dragStart}) => {
+const Dock = ({ playerShips, horizontal, mouseDown,  dragStart, dragEnd}) => {
     return (
         <div className="FleetDock">
             {playerShips.map(ship => {
@@ -204,6 +193,7 @@ const Dock = ({ playerShips, horizontal, mouseDown,  dragStart}) => {
                             draggable={true} 
                             onMouseDown={mouseDown} 
                             onDragStart={dragStart}
+                            onDragEnd={dragEnd}
                         >
                             {ship.orientation[0].map(idx => {
                                 return (
@@ -212,6 +202,9 @@ const Dock = ({ playerShips, horizontal, mouseDown,  dragStart}) => {
                             })}
                         </div>
                     )
+                }
+                else {
+                    return(<div></div>)
                 }
             })}
         </div>
