@@ -82,13 +82,16 @@ const GameArea = ({ players }) => {
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
+        let shipStartingPosition = hoveredSquare - selectedShipIndexMultipler
 
-        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, hoveredSquare)) { return }
+        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, shipStartingPosition)) { return }
+        if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
+        
 
         shipOrientation.forEach(index => {
-            humanPlayer.gameboard.gameboard[hoveredSquare - selectedShipIndexMultipler + index].occupied = true  // Populate gameboard occupied variable.
-            humanPlayer.gameboard.gameboard[hoveredSquare - selectedShipIndexMultipler + index].ship = shipObject // Populate gameboard ship variable.
-            shipObject.position.push(hoveredSquare - selectedShipIndexMultipler + index) // Populates position variable in ship.
+            humanPlayer.gameboard.gameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
+            humanPlayer.gameboard.gameboard[shipStartingPosition + index].ship = shipObject // Populate gameboard ship variable.
+            shipObject.position.push(shipStartingPosition + index) // Populates position variable in ship.
         }) 
 
         gameEngine.updateHumanPlayer(humanPlayer)
@@ -99,14 +102,15 @@ const GameArea = ({ players }) => {
     }
 
     // Check if ship placement interferes with existing ships.
-    const checkShipCollision = (gameboard, orientation, hoveredSquare) => {
-        return orientation.some(index => gameboard[hoveredSquare - selectedShipIndexMultipler + index].occupied === true )
+    const checkShipCollision = (gameboard, orientation, shipStartingPosition) => {
+        return orientation.some(index => gameboard[shipStartingPosition + index].occupied === true )
     }
 
-    // // Check if ship is out of bounds on horizontal axis.
-    // const checkHorizontalOutOfBounds = (position, orientation) => {
-    //     return orientation.some(index => (position % 10) + index >= 10)
-    // }
+    // Check if ship is out of bounds on horizontal axis.
+    const checkHorizontalOutOfBounds = (orientation, shipStartingPosition) => {
+        return orientation.some(index => (shipStartingPosition % 10) + index >= 10) 
+                // orientation.some(index => (hoveredSquare % 10) - index < 0)
+    }
 
     // // Check if ship is out of bounds on vertical axis.
     // const checkVerticalOutOfBounds = (position, orientation) => {
