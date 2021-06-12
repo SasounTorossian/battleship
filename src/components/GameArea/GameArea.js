@@ -70,8 +70,7 @@ const GameArea = ({ players }) => {
     }
 
     const dragDrop = (e) => {
-        console.log("DROPPED");
-        // NOTE: Have single function to handle all of this in the gameEngine
+        // NOTE: Have single function to handle all of this in the gameEngine?
         let humanPlayer = players[0]
         let hoveredSquare = parseInt(e.target.dataset.id)
         let shipNameWithLastId = draggedShip.lastChild.id // destroyer-0
@@ -84,9 +83,9 @@ const GameArea = ({ players }) => {
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
         let shipStartingPosition = hoveredSquare - selectedShipIndexMultipler
 
-        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, shipStartingPosition)) { return }
         if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
-        
+        if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
+        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, shipStartingPosition)) { return }
 
         shipOrientation.forEach(index => {
             humanPlayer.gameboard.gameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
@@ -109,13 +108,12 @@ const GameArea = ({ players }) => {
     // Check if ship is out of bounds on horizontal axis.
     const checkHorizontalOutOfBounds = (orientation, shipStartingPosition) => {
         return orientation.some(index => (shipStartingPosition % 10) + index >= 10) 
-                // orientation.some(index => (hoveredSquare % 10) - index < 0)
     }
 
-    // // Check if ship is out of bounds on vertical axis.
-    // const checkVerticalOutOfBounds = (position, orientation) => {
-    //     return orientation.some(index => (position + index >= 100))
-    // }
+    // Check if ship is out of bounds on vertical axis.
+    const checkVerticalOutOfBounds = (orientation, shipStartingPosition) => {
+        return orientation.some(index => shipStartingPosition + index >= 100 || shipStartingPosition + index < 0)
+    }
 
     return (
         <div className="GameArea">
@@ -205,7 +203,7 @@ const Control = ({ handleHorizontal, handleReset }) => {
 
 const Dock = ({ playerShips, horizontal, mouseDown,  dragStart, dragEnd}) => {
     return (
-        <div className="FleetDock">
+        <div className={`Dock ${horizontal ? "dock-horizontal" : "dock-vertical"}`}>
             {playerShips.map(ship => {
                 if(ship.position.length === 0) {
                     return (

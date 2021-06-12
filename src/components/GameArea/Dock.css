@@ -1,8 +1,16 @@
 .Dock {
-    background-color: blue;
     height: 40%;
     width: 100%;
+    display: flex;
 }
+
+.dock-horizontal {
+}
+
+.dock-vertical {
+    flex-direction: row;
+}
+
 
 .ship-segment {
     width: 40px;
