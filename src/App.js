@@ -3,7 +3,6 @@ import React, {useState, useEffect, useRef, useComponentWillMount, useLayoutEffe
 import Header from "./components/Header/Header"
 import GameArea from "./components/GameArea/GameArea"
 import gameEngine from "./logic/gameEngine"
-import dragAndDrop from "./logic/dragAndDrop/dragAndDrop"
 
 //TODO: saving App.js page causes two boards to appear.
 function App() {

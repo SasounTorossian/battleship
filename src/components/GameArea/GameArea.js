@@ -5,6 +5,7 @@ import gameEngine from "../../logic/gameEngine"
 import gameboardFactory from '../../logic/factories/gameboardFactory/gameboardFactory'
 
 const GameArea = ({ players }) => {
+    console.log(players);
     const [horizontal, setHorizontal] = useState(true)
 
     const handleHorizontal = () => { setHorizontal(!horizontal) }
@@ -22,74 +23,54 @@ const GameArea = ({ players }) => {
     }
 
     let selectedShipNameWithIndex
+    let selectedShipIndex
     let draggedShip
-    // let draggedShipLength
-
+    let draggedShipLength
+    let selectedShipIndexMultipler
+    
     const mouseDown = (e) => {
         console.log(e.target);
         selectedShipNameWithIndex = e.target.id
-        console.log(selectedShipNameWithIndex);
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected 
+        selectedShipIndexMultipler = selectedShipIndex * (horizontal ? 1 : 10)
     }
 
     const dragStart = (e) => {
-        console.log(e.target);
         draggedShip = e.target
-        // draggedShipLength = draggedShip.childNodes.length
+        draggedShipLength = draggedShip.childNodes.length
     }
 
-    // TODO: Use to highlight where object would be. (Need future position too depending if horizontal or vertical)
     const dragEnter = (e) => {
         e.preventDefault()
-        // console.log("drag enter");
-    }
-
-
-    const dragOver = (e) => {
-        e.preventDefault()
-        // console.log("drag over");
-    }
-
-    // TODO: Remove hightlight.
-    const dragLeave = (e) => {
-        // Not needed?
-        // console.log("drag leave");
-    }
-
-    // TODO: Might not have any need
-    const dragEnd = (e) => {
-        // console.log("drag end");
+        document.querySelectorAll(".user-gamesquare").forEach(square => {
+            square.classList.remove("highlight")
+        })
+        for(let i=0; i < draggedShipLength; i++) {
+            let indexMultiplier = i * (horizontal ? 1 : 10)
+            let highlightedElement = document.querySelector(`[data-id='${parseInt(e.target.dataset.id) - selectedShipIndexMultipler + indexMultiplier}']`)
+            if(highlightedElement !== null) { highlightedElement.classList.add("highlight") }
+        }
     }
 
     const dragDrop = (e) => {
         console.log("DROPPED");
-        // NOTE: Need to FULLLLLYYYYY understand what's going on here instead of hacking it together.
         // NOTE: Have single function to handle all of this in the gameEngine
         let humanPlayer = players[0]
         let shipNameWithLastId = draggedShip.lastChild.id // destroyer-0
         let shipClass = shipNameWithLastId.slice(0, -2) // destroyer
         let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 0
         let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square.
-        let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected 
         shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship.
         // TODO: Will need to check overflow (horizontal and vertical)
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
 
-        if(horizontal) {
-            shipOrientation.forEach(index => {
-                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].occupied = true  // Populate gameboard occupied variable.
-                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndex + index].ship = shipObject // Populate gameboard ship variable.
-                shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndex + index) // Populates position variable in ship.
-            }) 
-        }
-        else {
-            shipOrientation.forEach(index => {
-                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index].occupied = true  // Populate gameboard occupied variable.
-                humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index].ship = shipObject // Populate gameboard ship variable.
-                shipObject.position.push(parseInt(e.target.dataset.id) - (selectedShipIndex * 10) + index) // Populates position variable in ship.
-            }) 
-        }
+        shipOrientation.forEach(index => {
+            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index].occupied = true  // Populate gameboard occupied variable.
+            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index].ship = shipObject // Populate gameboard ship variable.
+            shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index) // Populates position variable in ship.
+        }) 
 
         gameEngine.updateHumanPlayer(humanPlayer)
         gameEngine.updatePlayersState()
@@ -103,9 +84,6 @@ const GameArea = ({ players }) => {
             <Gameboards 
                 players={players} 
                 dragEnter={dragEnter}
-                dragOver={dragOver}
-                dragLeave={dragLeave}
-                dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
             <Control 
@@ -122,16 +100,14 @@ const GameArea = ({ players }) => {
     )
 }
 
-const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragEnd, dragDrop }) => {
+// NOTE: Do I even need a humanPlayer?
+const Gameboards = ({ players, dragEnter, dragDrop }) => {
     return (
         <div className="Gameboards">
             <Gameboard 
                 player={players[0]} 
                 humanPlayer={ true } 
                 dragEnter={dragEnter}
-                dragOver={dragOver}
-                dragLeave={dragLeave}
-                dragEnd={dragEnd}
                 dragDrop={dragDrop}
             />
             <Gameboard 
@@ -143,7 +119,7 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragEnd, dragDrop
 }
 
 
-const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEnd, dragDrop }) => {
+const Gameboard = ({ player, humanPlayer, dragEnter, dragDrop }) => {
     
     let gameboard = player.gameboard
     let ships = player.fleet.ships
@@ -158,9 +134,6 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
                             key={square.id}
                             onClick={(e) => gameboard.clickHandler(e, ships, square.id)} // NOTE: Could be better to call gameEngine.
                             onDragEnter={dragEnter}
-                            onDragOver={dragOver}
-                            onDragLeave={dragLeave}
-                            onDragEnd={dragEnd}
                             onDrop={dragDrop}
                         >
 
@@ -172,7 +145,6 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragEn
     )
 }
 
-//TODO: Reset
 const Control = ({ handleHorizontal, handleReset }) => {
     return (
         <div className="Control">
