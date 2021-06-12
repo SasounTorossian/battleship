@@ -75,10 +75,10 @@ const GameArea = ({ players }) => {
         let hoveredSquare = parseInt(e.target.dataset.id)
         let shipNameWithLastId = draggedShip.lastChild.id // destroyer-0
         let shipClass = shipNameWithLastId.slice(0, -2) // destroyer
-        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 0
-        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square.
-        shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship.
-
+        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 0 // NOTE: Can be deleted
+        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square. // NOTE: Can be deleted
+        shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship. // NOTE: Can be deleted
+ 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
         let shipStartingPosition = hoveredSquare - selectedShipIndexMultipler
@@ -104,10 +104,9 @@ const GameArea = ({ players }) => {
     const checkShipCollision = (gameboard, orientation, shipStartingPosition) => {
         return orientation.some(index => gameboard[shipStartingPosition + index].occupied === true )
     }
-
     // Check if ship is out of bounds on horizontal axis.
     const checkHorizontalOutOfBounds = (orientation, shipStartingPosition) => {
-        return orientation.some(index => (shipStartingPosition % 10) + index >= 10) 
+        return orientation.some(index => (shipStartingPosition % 10) + index >= 10 || shipStartingPosition + index < 0) 
     }
 
     // Check if ship is out of bounds on vertical axis.
