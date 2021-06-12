@@ -21,6 +21,10 @@
     height: 40px;
 }
 
+.highlight {
+    opacity: 0.6;
+}
+
 .gamesquare-destroyer {
     background-color: coral;
 }
