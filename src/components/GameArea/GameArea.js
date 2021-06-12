@@ -73,20 +73,22 @@ const GameArea = ({ players }) => {
         console.log("DROPPED");
         // NOTE: Have single function to handle all of this in the gameEngine
         let humanPlayer = players[0]
+        let hoveredSquare = parseInt(e.target.dataset.id)
         let shipNameWithLastId = draggedShip.lastChild.id // destroyer-0
         let shipClass = shipNameWithLastId.slice(0, -2) // destroyer
         let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 0
         let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square.
         shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship.
-        // TODO: Will need to check overflow (horizontal and vertical)
 
         let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
 
+        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, hoveredSquare)) { return }
+
         shipOrientation.forEach(index => {
-            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index].occupied = true  // Populate gameboard occupied variable.
-            humanPlayer.gameboard.gameboard[parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index].ship = shipObject // Populate gameboard ship variable.
-            shipObject.position.push(parseInt(e.target.dataset.id) - selectedShipIndexMultipler + index) // Populates position variable in ship.
+            humanPlayer.gameboard.gameboard[hoveredSquare - selectedShipIndexMultipler + index].occupied = true  // Populate gameboard occupied variable.
+            humanPlayer.gameboard.gameboard[hoveredSquare - selectedShipIndexMultipler + index].ship = shipObject // Populate gameboard ship variable.
+            shipObject.position.push(hoveredSquare - selectedShipIndexMultipler + index) // Populates position variable in ship.
         }) 
 
         gameEngine.updateHumanPlayer(humanPlayer)
@@ -95,6 +97,21 @@ const GameArea = ({ players }) => {
         // TODO: Clean up variables.
         // TODO: Delete original drag and drop file.  
     }
+
+    // Check if ship placement interferes with existing ships.
+    const checkShipCollision = (gameboard, orientation, hoveredSquare) => {
+        return orientation.some(index => gameboard[hoveredSquare - selectedShipIndexMultipler + index].occupied === true )
+    }
+
+    // // Check if ship is out of bounds on horizontal axis.
+    // const checkHorizontalOutOfBounds = (position, orientation) => {
+    //     return orientation.some(index => (position % 10) + index >= 10)
+    // }
+
+    // // Check if ship is out of bounds on vertical axis.
+    // const checkVerticalOutOfBounds = (position, orientation) => {
+    //     return orientation.some(index => (position + index >= 100))
+    // }
 
     return (
         <div className="GameArea">
