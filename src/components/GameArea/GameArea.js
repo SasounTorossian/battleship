@@ -25,13 +25,12 @@ const GameArea = ({ players }) => {
     let selectedShipNameWithIndex
     let selectedShipIndex
     let draggedShip
-    let draggedShipLength
+    let draggedShipChildren
     let selectedShipIndexMultipler
 
     const clearAllHighlights = () => {
         document.querySelectorAll(".user-gamesquare").forEach(square => {
-            square.classList.remove("highlight-legal")
-            square.classList.remove("highlight-illegal")
+            square.classList.remove("highlight-legal", "highlight-illegal")
         })
     }
     
@@ -43,98 +42,24 @@ const GameArea = ({ players }) => {
 
     const dragStart = (e) => {
         draggedShip = e.target
-        draggedShipLength = draggedShip.childNodes.length
+        draggedShipChildren = Array.from(draggedShip.childNodes)
     }
 
-    // Check if ship is out of bounds on horizontal axis.
-    const checkHighlightCollision = (gameboard) => {
-        return gameboard.some(square => !square.classList.contains("gamesquare-empty"))
-    }
-
-    const checkAllNodesValid = (gameboard) => {
-        return gameboard.every(square => square !== null)
-    }
-
-    // TODO: Stop highlight from overflowing/underflowing.
     const dragEnter = (e) => {
         e.preventDefault()
         clearAllHighlights()
 
         let shipStartingPosition = parseInt(e.target.dataset.id) - selectedShipIndexMultipler
-        let shipOrientation = []
-        let shipGameboardSquares = []
-        let legalPlacement = true
+        let shipOrientation = draggedShipChildren.map((child, index) => index * (horizontal ? 1 : 10))
+        let shipGameboardSquares = shipOrientation.map(index => document.querySelector(`[data-id='${ shipStartingPosition + index}']`))
 
-        for(let i=0; i < draggedShipLength; i++) {
-            shipOrientation.push(i * (horizontal ? 1 : 10))
-        }
-
-        shipOrientation.forEach(index => {
-            shipGameboardSquares.push(document.querySelector(`[data-id='${ shipStartingPosition + index}']`))
+        shipGameboardSquares.forEach(square => {
+            if(square === null) { return }
+            else if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { square.classList.add("highlight-illegal") }
+            else if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { square.classList.add("highlight-illegal") }
+            else if(checkHighlightCollision(shipGameboardSquares)){ square.classList.add("highlight-illegal") }
+            else { square.classList.add("highlight-legal") }
         })
-
-        if(checkAllNodesValid(shipGameboardSquares)) {
-            if( (horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) ||
-                (!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) ||
-                (checkHighlightCollision(shipGameboardSquares))) { 
-                    legalPlacement = false 
-                }
-            else {
-                    legalPlacement = true
-            }
-
-            shipGameboardSquares.forEach(square => {
-                square.classList.add(legalPlacement ? "highlight-legal" : "highlight-illegal")
-            })
-
-        }
-
-
-
-        // shipOrientation.forEach(index => {
-        //     let highlightedElement = document.querySelector(`[data-id='${ shipStartingPosition + index}']`)
-
-        //     if(highlightedElement !== null) {
-        //         if((horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) ||
-        //             (!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition))) { 
-        //                 highlightedElement.classList.add("highlight-illegal")
-        //             }
-        //         else {
-        //                 highlightedElement.classList.add("highlight-legal")
-        //         }
-        //     }
-
-        //     if ((horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) ||
-        //         (!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) ||
-        //         highlightedElement.classList.contains("gamesquare-empty"))  {
-        //             console.log("ILLEGAL PLACEMENT");
-        //     }
-        //     console.log(checkHorizontalHighlight(shipOrientation, shipStartingPosition));
-            
-
-        //     humanPlayer.gameboard.gameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
-        //     humanPlayer.gameboard.gameboard[shipStartingPosition + index].ship = shipObject // Populate gameboard ship variable.
-        //     shipObject.position.push(shipStartingPosition + index) // Populates position variable in ship.
-        // }) 
-
-        // let nodes= []
-        // for(let i=0; i < draggedShipLength; i++) {
-        //     let indexMultiplier = i * (horizontal ? 1 : 10) // NOTE: Serves same role as orientation [0, 1, 2] vs [0, 10, 20]
-
-        //     let highlightedElement = document.querySelector(`[data-id='${ shipStartingPosition + indexMultiplier}']`)
-        //     // nodes.push(highlightedElement)
-        //     // console.log(highlightedElement.classList.contains("gamesquare-empty")); // Can be used for collision. If ANY square is not empty, collision detected.
-        //     if(highlightedElement !== null) { highlightedElement.classList.add("highlight") }
-        // }
-
-        // nodes.forEach((node, idx) => {
-        //     if(idx === 0) {
-        //         console.log(node.dataset.id);
-        //     }
-        //     // if(node !== null) { node.classList.add("highlight") }
-        // })
-
-        // console.log(nodes);
     }
 
     // NOTE: Not Needed
@@ -182,20 +107,25 @@ const GameArea = ({ players }) => {
         // TODO: Clean up variables.
         // TODO: Delete original drag and drop file.  
     }
+    
+    // Check if ship is out of bounds on horizontal axis.
+    const checkHorizontalOutOfBounds = (orientation, shipStartingPosition) => {
+        return orientation.some(index => (shipStartingPosition % 10) + index >= 10 || shipStartingPosition + index < 0) 
+    }
+    
+    // Check if ship is out of bounds on vertical axis.
+    const checkVerticalOutOfBounds = (orientation, shipStartingPosition) => {
+        return orientation.some(index => shipStartingPosition + index >= 100 || shipStartingPosition + index < 0)
+    }
 
     // Check if ship placement interferes with existing ships.
     const checkShipCollision = (gameboard, orientation, shipStartingPosition) => {
         return orientation.some(index => gameboard[shipStartingPosition + index].occupied === true )
     }
 
-    // Check if ship is out of bounds on horizontal axis.
-    const checkHorizontalOutOfBounds = (orientation, shipStartingPosition) => {
-        return orientation.some(index => (shipStartingPosition % 10) + index >= 10 || shipStartingPosition + index < 0) 
-    }
-
-    // Check if ship is out of bounds on vertical axis.
-    const checkVerticalOutOfBounds = (orientation, shipStartingPosition) => {
-        return orientation.some(index => shipStartingPosition + index >= 100 || shipStartingPosition + index < 0)
+    // Check if ship highlighting is colliding with pre-placed ship.
+    const checkHighlightCollision = (gameboard) => {
+        return gameboard.some(square => !square.classList.contains("gamesquare-empty"))
     }
 
     return (
