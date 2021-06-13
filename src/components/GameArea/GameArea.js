@@ -5,11 +5,11 @@ import gameEngine from "../../logic/gameEngine"
 import gameboardFactory from '../../logic/factories/gameboardFactory/gameboardFactory'
 
 const GameArea = ({ players }) => {
-    console.log(players);
     const [horizontal, setHorizontal] = useState(true)
 
     const handleHorizontal = () => { setHorizontal(!horizontal) }
 
+    // NOTE: move to gameEngine?
     const handleReset = () => {
         let humanPlayer = players[0]
         humanPlayer.fleet.ships.forEach(ship => {
@@ -22,29 +22,31 @@ const GameArea = ({ players }) => {
         gameEngine.updatePlayersState()
     }
 
-    let selectedShipNameWithIndex
-    let selectedShipIndex
-    let draggedShip
-    let draggedShipChildren
-    let selectedShipIndexMultipler
+    let draggedShip // Element that is selected when selected ship entered drag space. E.g. <div class="ship destroyer-container-horizontal" draggable="true"></>
+    let draggedShipChildren // All the children elements that make up ship element. E.g. [<div class="ship-segment" id="destroyer-0"></div>, <div class="ship-segment" id="destroyer-1"></div>]
+    let selectedShipIndexMultipler // Ship index multipler to make positional calculations based on horizontal positioning E.g. [0, 1, 2, ...], or vertical E.g. [0 , 10, 20, ...]
 
+    // Clears all highlihts from gameboard before calculating new highlight pattern.
     const clearAllHighlights = () => {
         document.querySelectorAll(".user-gamesquare").forEach(square => {
             square.classList.remove("highlight-legal", "highlight-illegal")
         })
     }
     
+    // mouseDown event that activates when user clicks on one of the ships in the dock.
     const mouseDown = (e) => {
-        selectedShipNameWithIndex = e.target.id
-        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected 
-        selectedShipIndexMultipler = selectedShipIndex * (horizontal ? 1 : 10)
+        let selectedShipNameWithIndex = e.target.id // The type of the selected ship plus the selected segment. E.g. destroyer-1, carrier-0
+        let selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1)) // Which segment has been selected. E.g. 1, 0
+        selectedShipIndexMultipler = selectedShipIndex * (horizontal ? 1 : 10) 
     }
 
+    // dragStart event that acticates when user drags ship object into the gameboard area.
     const dragStart = (e) => {
         draggedShip = e.target
         draggedShipChildren = Array.from(draggedShip.childNodes)
     }
 
+    // dragEnter event that activates when ship gets dragged into new game square within the gameboard
     const dragEnter = (e) => {
         e.preventDefault()
         clearAllHighlights()
@@ -72,40 +74,37 @@ const GameArea = ({ players }) => {
         e.preventDefault()
     }
 
+    // dragEnd event that activates when user releases mouse-down in invalid position on gameboard.
     const dragEnd = (e) => {
         clearAllHighlights()
     }
 
+    // NOTE: move to gameEngine?
+    // dragDrop event that activates when user releases mouse-down over valid position on gameboard.
     const dragDrop = (e) => {
-        // NOTE: Have single function to handle all of this in the gameEngine?
-        // NOTE: humanPlayer.gameboard.gameboard concise? 
-        let humanPlayer = players[0]
-        let hoveredSquare = parseInt(e.target.dataset.id)
-        let shipNameWithLastId = draggedShip.lastChild.id // destroyer-1
-        let shipClass = shipNameWithLastId.slice(0, -2) // destroyer
-        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1)) // 1 // NOTE: Can be deleted
-        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id) // Last place of ship on current square. e.g. 79 80// NOTE: Can be deleted
-        shipLastId = shipLastId - selectedShipIndex // How far back to start placing ship. // NOTE: Can be deleted
+        let humanPlayer = players[0] 
+        let humanGameboard = humanPlayer.gameboard.gameboard
+        let droppedSquare = parseInt(e.target.dataset.id) // Get current square user dropped ship on.
+        let shipNameWithLastId = draggedShip.lastChild.id // Gets the last segment of ship container E.g. destroyer-1
+        let shipClass = shipNameWithLastId.slice(0, -2) // Gets type of ship from container E.g. destroyer
  
-        let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass)
-        let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1]
-        let shipStartingPosition = hoveredSquare - selectedShipIndexMultipler
+        let shipObject = humanPlayer.fleet.ships.find(ship => ship.type === shipClass) // Find correct ship object in player fleet based on ship type.
+        let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1] // Get ship orientation array from ship object.
+        let shipStartingPosition = droppedSquare - selectedShipIndexMultipler // Get where the ship's first position is based on current square and where ship was clicked.
 
         if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
-        if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
-        if(checkShipCollision(humanPlayer.gameboard.gameboard, shipOrientation, shipStartingPosition)) { return }
+        else if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
+        else if(checkShipCollision(humanGameboard, shipOrientation, shipStartingPosition)) { return }
+        else {
+            shipOrientation.forEach(index => {
+                humanGameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
+                humanGameboard[shipStartingPosition + index].ship = shipObject // Populate gameboard ship variable.
+                shipObject.position.push(shipStartingPosition + index) // Populates position variable in ship.
+            }) 
 
-        shipOrientation.forEach(index => {
-            humanPlayer.gameboard.gameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
-            humanPlayer.gameboard.gameboard[shipStartingPosition + index].ship = shipObject // Populate gameboard ship variable.
-            shipObject.position.push(shipStartingPosition + index) // Populates position variable in ship.
-        }) 
-
-        gameEngine.updateHumanPlayer(humanPlayer)
-        gameEngine.updatePlayersState()
-
-        // TODO: Clean up variables.
-        // TODO: Delete original drag and drop file.  
+            gameEngine.updateHumanPlayer(humanPlayer)
+            gameEngine.updatePlayersState()
+        } 
     }
     
     // Check if ship is out of bounds on horizontal axis.

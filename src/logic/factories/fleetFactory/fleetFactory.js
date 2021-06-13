@@ -9,6 +9,7 @@ const fleetFactory = () => {
     // Checks if all ships in the fleet are sunk.
     const checkIfAllShipsSunk = () => { return ships.every(ship => ship.isSunk()) }
 
+    //TODO: Change "type" to "class" for better accuracy.
     const ships = [
         {
             type: "destroyer",
