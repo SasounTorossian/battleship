@@ -8,7 +8,7 @@
 }
 
 .Gameboard {
-    background-color: white;
+    background-color: blue;
     width: 400px;
     height: 400px;
     display: flex;
@@ -21,8 +21,12 @@
     height: 40px;
 }
 
-.highlight {
-    opacity: 0.6;
+.highlight-legal {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.highlight-illegal {
+    background-color: rgba(255, 0, 0, 0.4);
 }
 
 .gamesquare-destroyer {
