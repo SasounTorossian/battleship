@@ -1,10 +1,10 @@
-import React, { useLayoutEffect, useState} from 'react'
+import React, { useState } from 'react'
 import './GameArea.css'
 import './Dock.css'
 import gameEngine from "../../logic/gameEngine"
-import gameboardFactory from '../../logic/factories/gameboardFactory/gameboardFactory'
 
 const GameArea = ({ players }) => {
+    console.log(players);
     const [horizontal, setHorizontal] = useState(true)
 
     const handleHorizontal = () => { setHorizontal(!horizontal) }
