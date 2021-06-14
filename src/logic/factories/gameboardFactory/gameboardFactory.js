@@ -115,19 +115,15 @@ const gameboardFactory = () => {
 
     // NOTE: Replace testPosition and testOrientation with mock functions in Jest.
     // Places each ship object on the gameboard according to its parameters.
-    const placeShip = (ship, testPosition = false, testOrientation = false) => {
+    const placeShip = (ship) => {
 
         // Randomly select (or test select) horizontal or vertical orientation of ship.
-        let randomOrientation
         let currentShipOrientation
-        if(testOrientation !== false) { randomOrientation = testOrientation }
-        else { randomOrientation = Math.floor(Math.random() * ship.orientation.length) }
+        let randomOrientation = Math.floor(Math.random() * ship.orientation.length)
         currentShipOrientation = ship.orientation[randomOrientation]
         
         // Randomly select (or test select) starting positition of ship.  
-        let randomPosition
-        if(testPosition !== false) { randomPosition = testPosition }
-        else { randomPosition = Math.floor(Math.random() * gameboard.length) }
+        let randomPosition = Math.floor(Math.random() * gameboard.length)
 
         if((randomOrientation ? 
             checkVerticalOutOfBounds(randomPosition, currentShipOrientation) :
