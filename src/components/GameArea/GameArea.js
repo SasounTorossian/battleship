@@ -57,10 +57,16 @@ const GameArea = ({ players }) => {
 
         shipGameboardSquares.forEach(square => {
             if(square === null) { return }
-            else if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { square.classList.add("highlight-illegal") }
-            else if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { square.classList.add("highlight-illegal") }
-            else if(checkHighlightCollision(shipGameboardSquares)){ square.classList.add("highlight-illegal") }
-            else { square.classList.add("highlight-legal") }
+            else if((horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) ||
+                    (!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) ||
+                    (checkHighlightCollision(shipGameboardSquares)))
+                    { 
+                        square.classList.add("highlight-illegal") 
+                    }
+            else { 
+                        square.classList.add("highlight-legal") 
+                }
+                    
         })
     }
 
