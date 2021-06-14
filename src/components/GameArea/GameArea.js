@@ -98,9 +98,12 @@ const GameArea = ({ players }) => {
         let shipOrientation = horizontal ? shipObject.orientation[0] : shipObject.orientation[1] // Get ship orientation array from ship object.
         let shipStartingPosition = droppedSquare - selectedShipIndexMultipler // Get where the ship's first position is based on current square and where ship was clicked.
 
-        if(horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
-        else if(!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) { return }
-        else if(checkShipCollision(humanGameboard, shipOrientation, shipStartingPosition)) { return }
+        if((horizontal && checkHorizontalOutOfBounds(shipOrientation, shipStartingPosition)) ||
+            (!horizontal && checkVerticalOutOfBounds(shipOrientation, shipStartingPosition)) ||
+            (checkShipCollision(humanGameboard, shipOrientation, shipStartingPosition))) 
+            { 
+                return 
+            }
         else {
             shipOrientation.forEach(index => {
                 humanGameboard[shipStartingPosition + index].occupied = true  // Populate gameboard occupied variable.
