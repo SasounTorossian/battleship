@@ -1,4 +1,5 @@
 import gameboardFactory from "./gameboardFactory"
+import gameboardFactoryHelpers from "../../helpers/gameboardFactoryHelpers"
 import fleetFactory from "../fleetFactory/fleetFactory"
 
 test("test gameboardFactory is valid", () => {
@@ -43,7 +44,9 @@ test('test ID array formatting console.table() debugging', () => {
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
 
-    expect(newGameboard.displayArrayId()).toStrictEqual(testArray)
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayId(newGameboard.getBoard())).toStrictEqual(testArray)
 })
 
 test('test occupied array formatting console.table() debugging', () => {
@@ -63,7 +66,9 @@ test('test occupied array formatting console.table() debugging', () => {
     const newGameboard = gameboardFactory()
     newGameboard.initGameboard()
 
-    expect(newGameboard.displayArrayOccupied()).toStrictEqual(testArray)
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).toStrictEqual(testArray)
 })
 
 test('test horizontal destroyer placement in correct area', () => {
@@ -91,7 +96,9 @@ test('test horizontal destroyer placement in correct area', () => {
 
     newGameboard.placeShip(destroyer)
 
-    expect(newGameboard.displayArrayOccupied()).toMatchSnapshot()
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).toMatchSnapshot()
 })
 
 test('test vertical destroyer placement in correct area', () => {
@@ -119,7 +126,9 @@ test('test vertical destroyer placement in correct area', () => {
 
     newGameboard.placeShip(destroyer)
 
-    expect(newGameboard.displayArrayOccupied()).toMatchSnapshot()
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).toMatchSnapshot()
 })
 
 test('test horizontal destroyer placement in incorrect area', () => {
@@ -147,7 +156,9 @@ test('test horizontal destroyer placement in incorrect area', () => {
 
     newGameboard.placeShip(destroyer)
 
-    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).not.toStrictEqual(testArray)
 })
 
 test('test horizontal destroyer placement in array out of bounds', () => {
@@ -175,7 +186,9 @@ test('test horizontal destroyer placement in array out of bounds', () => {
 
     newGameboard.placeShip(destroyer)
 
-    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).not.toStrictEqual(testArray)
 })
 
 
@@ -204,7 +217,9 @@ test('test vertical destroyer placement in incorrect area and array out of array
 
     newGameboard.placeShip(destroyer)
 
-    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray)
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).not.toStrictEqual(testArray)
 })
 
 test('test placing all ships on gameboard with no collisions', () => {
@@ -231,7 +246,9 @@ test('test placing all ships on gameboard with no collisions', () => {
     let occupyArray = newGameboard.gameboard.map(square => +square.occupied)
     let totalShips = occupyArray.reduce((a, b) => a + b)
 
-    expect(newGameboard.displayArrayOccupied()).not.toStrictEqual(testArray) // Array should not be empty after placements
+    const newGameboardHelper = gameboardFactoryHelpers()
+
+    expect(newGameboardHelper.displayArrayOccupied(newGameboard.getBoard())).not.toStrictEqual(testArray) // Array should not be empty after placements
     expect(totalShips).toBe(17) // If no collisions, there should be 17 spots occupied by the ships
 })
 

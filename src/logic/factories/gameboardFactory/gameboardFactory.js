@@ -37,61 +37,7 @@ const gameboardFactory = () => {
 
     const clearBoard = () => { gameboard.length = 0 }
 
-    const getBoard = () => {
-        console.log(gameboard);
-        return gameboard
-    }
-
-    // Displays gameboard 1D array as 2D array of hits. 
-    // Used for debugging with console.table().
-    const displayArrayHit = () => {
-        let displayArray = []
-        let displayGameboard = gameboard.map(el => +el["hit"])
-
-        while(displayGameboard.length) {
-            displayArray.push( displayGameboard.splice(0, 10) )
-        }
-
-        return displayArray
-    }
-
-    // Displays gameboard 1D array as 2D array of IDs. 
-    // Used for debugging with console.table().
-    const displayArrayId = () => {
-        let displayArray = []
-        let displayGameboard = gameboard.map(el => el["id"])
-
-        while(displayGameboard.length) {
-            displayArray.push( displayGameboard.splice(0, 10) )
-        }
-
-        return displayArray
-    }
-
-    // Displays gameboard 1D array as 2D array of occupied spaces. 
-    // Used for debugging with console.table().
-    const displayArrayOccupied = () => {
-        let displayArray = []
-        let displayGameboard = gameboard.map(el => +el["occupied"])
-
-        while(displayGameboard.length) {
-            displayArray.push( displayGameboard.splice(0, 10) )
-        }
-
-        return displayArray
-    }
-
-    // Displays gameboard 1D array as 2D array of objects. 
-    // Used for debugging with console.table().
-    const displayArray = () => {
-        let displayArray = []
-
-        while(gameboard.length) {
-            displayArray.push( gameboard.splice(0, 10) )
-        }
-
-        return displayArray
-    }
+    const getBoard = () => { return gameboard }
 
     // Check if ship placement interferes with existing ships.
     const checkShipCollision = (orientation, position) => {
@@ -180,10 +126,6 @@ const gameboardFactory = () => {
         initGameboard,
         shipDragAndDropHandler,
         clickHandler,
-        displayArrayHit,
-        displayArrayId,
-        displayArrayOccupied,
-        displayArray,
         placeAllShips,
         placeShip,
         receiveAttack
