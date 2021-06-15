@@ -1,42 +1,33 @@
-import React from 'react'
 import './Dock.css'
 
-const Dock = React.forwardRef((props, shipRef) => {
+const Dock = ({ players, horizontal, mouseDown,  dragStart, dragEnd}) => {
+    let humanPlayerShips = players[0].fleet.ships
     return (
-        <div className="FleetDock" ref={shipRef}>
-            <div className={`ship destroyer-container`} draggable={true}>
-                <div className="ship-segment" id="destroyer-0"></div>
-                <div className="ship-segment" id="destroyer-1"></div>
-            </div>
-
-            <div className={`ship submarine-container`} draggable={true}>
-                <div className="ship-segment" id="submarine-0"></div>
-                <div className="ship-segment" id="submarine-1"></div>
-                <div className="ship-segment" id="submarine-2"></div>
-            </div>
-
-            <div className={`ship cruiser-container`} draggable={true}>
-                <div className="ship-segment" id="cruiser-0"></div>
-                <div className="ship-segment" id="cruiser-1"></div>
-                <div className="ship-segment" id="cruiser-2"></div>
-            </div>
-
-            <div className={`ship battleship-container`} draggable={true}>
-                <div className="ship-segment" id="battleship-0"></div>
-                <div className="ship-segment" id="battleship-1"></div>
-                <div className="ship-segment" id="battleship-2"></div>
-                <div className="ship-segment" id="battleship-3"></div>
-            </div>
-
-            <div className={`ship carrier-container`} draggable={true}>
-                <div className="ship-segment" id="carrier-0"></div>
-                <div className="ship-segment" id="carrier-1"></div>
-                <div className="ship-segment" id="carrier-2"></div>
-                <div className="ship-segment" id="carrier-3"></div>
-                <div className="ship-segment" id="carrier-5"></div>
-            </div>
+        <div className={`Dock ${horizontal ? "dock-horizontal" : "dock-vertical"}`}>
+            {humanPlayerShips.map(ship => {
+                if(ship.position.length === 0) {
+                    return (
+                        <div 
+                            className={`ship ${ship.type}-container-${horizontal ? "horizontal" : "vertical"}`} 
+                            draggable={true} 
+                            onMouseDown={mouseDown} 
+                            onDragStart={dragStart}
+                            onDragEnd={dragEnd}
+                        >
+                            {ship.orientation[0].map(idx => {
+                                return (
+                                    <div className="ship-segment" id={`${ship.type}-${idx}`}></div>
+                                )
+                            })}
+                        </div>
+                    )
+                }
+                else {
+                    return(<div></div>)
+                }
+            })}
         </div>
     )
-})
+}
 
 export default Dock

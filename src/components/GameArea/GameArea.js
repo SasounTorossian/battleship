@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
-import gameEngine from "../../logic/gameEngine"
+import Gameboard from '../Gameboard/Gameboard'
+import Control from '../Control/Control'
+import Dock from '../Dock/Dock'
 import './GameArea.css'
-import './Dock.css'
+
+import gameEngine from "../../logic/gameEngine"
 
 const GameArea = ({ players }) => {
     console.log(players);
@@ -12,6 +15,9 @@ const GameArea = ({ players }) => {
 
     // Called to reset player ship positions during drag and drop process.
     const handleReset = () => { gameEngine.handleGameboardReset(players[0]) }
+
+    // Called when user clicks on gameboard.
+    const handleClick = (player, SquareID) => { gameEngine.handleGameboardClick(player, SquareID) }
 
     let draggedShip // Element that is selected when selected ship entered drag space. E.g. <div class="ship destroyer-container-horizontal" draggable="true"></>
     let draggedShipChildren // All the children elements that make up ship element. E.g. [<div class="ship-segment" id="destroyer-0"></div>, <div class="ship-segment" id="destroyer-1"></div>]
@@ -56,8 +62,7 @@ const GameArea = ({ players }) => {
                     }
             else { 
                         square.classList.add("highlight-legal") 
-                }
-                    
+                }      
         })
     }
 
@@ -125,6 +130,7 @@ const GameArea = ({ players }) => {
         <div className="GameArea">
             <Gameboards 
                 players={players} 
+                handleClick={handleClick}
                 dragEnter={dragEnter}
                 dragOver={dragOver}
                 dragLeave={dragLeave}
@@ -145,12 +151,13 @@ const GameArea = ({ players }) => {
     )
 }
 
-const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
+const Gameboards = ({ players, handleClick, dragEnter, dragOver, dragLeave, dragDrop }) => {
     return (
         <div className="Gameboards">
             <Gameboard 
                 player={players[0]} 
                 humanPlayer={ true } 
+                handleClick={handleClick}
                 dragEnter={dragEnter}
                 dragOver={dragOver}
                 dragLeave={dragLeave}
@@ -159,77 +166,8 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
             <Gameboard 
                 player={players[1]} 
                 humanPlayer={ false }
+                handleClick={handleClick}
             />
-        </div>
-    )
-}
-
-const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDrop }) => {
-    
-    let gameboard = player.gameboard
-    return (
-        <div className="Gameboard">
-            {
-                gameboard.gameboard.map(square => {
-                    return (
-                        <div 
-                            className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
-                            data-id={square.id}
-                            key={square.id}
-                            onClick={(e) => gameEngine.handleGameboardClick(e, player, square.id)}
-                            onDragEnter={dragEnter}
-                            onDragOver={dragOver}
-                            onDragLeave={dragLeave}
-                            onDrop={dragDrop}
-                        >
-
-                        </div>
-                    )
-                })
-            }
-        </div>
-    )
-}
-
-const Control = ({ handleHorizontal, handleReset }) => {
-    return (
-        <div className="Control">
-            <button onClick={handleHorizontal}>
-                Change Orientation
-            </button>
-            <button onClick={handleReset}>
-                Reset Ship Positions
-            </button>
-        </div>
-    )
-}
-
-const Dock = ({ players, horizontal, mouseDown,  dragStart, dragEnd}) => {
-    let humanPlayerShips = players[0].fleet.ships
-    return (
-        <div className={`Dock ${horizontal ? "dock-horizontal" : "dock-vertical"}`}>
-            {humanPlayerShips.map(ship => {
-                if(ship.position.length === 0) {
-                    return (
-                        <div 
-                            className={`ship ${ship.type}-container-${horizontal ? "horizontal" : "vertical"}`} 
-                            draggable={true} 
-                            onMouseDown={mouseDown} 
-                            onDragStart={dragStart}
-                            onDragEnd={dragEnd}
-                        >
-                            {ship.orientation[0].map(idx => {
-                                return (
-                                    <div className="ship-segment" id={`${ship.type}-${idx}`}></div>
-                                )
-                            })}
-                        </div>
-                    )
-                }
-                else {
-                    return(<div></div>)
-                }
-            })}
         </div>
     )
 }

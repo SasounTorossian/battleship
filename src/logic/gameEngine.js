@@ -30,7 +30,7 @@ const gameEngine = (() => {
         )
     }
 
-    const handleGameboardClick = (e, player, squareID) => {
+    const handleGameboardClick = (player, squareID) => {
         player.gameboard.receiveAttack(player.fleet.ships, squareID)
         updatePlayersState()
     }
