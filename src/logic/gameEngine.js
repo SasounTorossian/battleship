@@ -1,4 +1,5 @@
 import playerFactory from "./factories/playerFactory/playerFactory"
+import gameboardFactory from "./factories/gameboardFactory/gameboardFactory"
 
 const gameEngine = (() => {
     let setPlayersInternal
@@ -27,6 +28,11 @@ const gameEngine = (() => {
             playerFactory(playerName), 
             playerFactory(AIName)
         )
+    }
+
+    const handleGameboardClick = (e, player, squareID) => {
+        player.gameboard.receiveAttack(player.fleet.ships, squareID)
+        updatePlayersState()
     }
 
     // Initialized gameboard for both players.
@@ -67,6 +73,7 @@ const gameEngine = (() => {
         initializeSetPlayers,
         updatePlayersState,
         initializePlayers,
+        handleGameboardClick,
         initializePlayersGameboard,
         placeAIShips,
         getPlayers,

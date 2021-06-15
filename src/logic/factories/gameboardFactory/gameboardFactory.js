@@ -25,16 +25,6 @@ const gameboardFactory = () => {
         gameEngine.updatePlayersState()
     }
 
-    // Handles oncoming clicks on the gameboard.
-    const clickHandler = (e, ships, squareID) => {
-        //NOTE: based on e.target.ship.type, have different sound effects play?
-        console.log(e.target);
-        console.log(ships);
-        console.log(squareID);
-        receiveAttack(ships, squareID)
-        gameEngine.updatePlayersState()
-    }
-
     const clearBoard = () => { gameboard.length = 0 }
 
     const getBoard = () => { return gameboard }
@@ -104,14 +94,14 @@ const gameboardFactory = () => {
     // Takes gameboard square as an ID, and passes hit to ship if it exists.
     const receiveAttack = (ships, hitPosition) => {
         
-        if(gameboard[hitPosition].hit) {
+        if(gameboard[hitPosition].hit) { // If position already hit, don't do anything
             return
         }
-        else if(!gameboard[hitPosition].occupied) {
+        else if(!gameboard[hitPosition].occupied) { // If position is empty but not hit, mark it as hit
             gameboard[hitPosition].hit = true
             return
         }
-        else {
+        else { //If position is occupied and not hit, then attack ship.
             gameboard[hitPosition].hit = true
             let ship = findShipFromPosition(ships, hitPosition) // NOTE: Could maybe check the gameboard array instead to find which ship it is.
             let index = findIndexFromPosition(ship, hitPosition) 
@@ -125,7 +115,6 @@ const gameboardFactory = () => {
         getBoard,
         initGameboard,
         shipDragAndDropHandler,
-        clickHandler,
         placeAllShips,
         placeShip,
         receiveAttack

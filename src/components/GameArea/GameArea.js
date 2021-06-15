@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import gameEngine from "../../logic/gameEngine"
 import './GameArea.css'
 import './Dock.css'
-import gameEngine from "../../logic/gameEngine"
 
 const GameArea = ({ players }) => {
     console.log(players);
@@ -184,7 +184,6 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
 const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDrop }) => {
     
     let gameboard = player.gameboard
-    let ships = player.fleet.ships
     return (
         <div className="Gameboard">
             {
@@ -194,7 +193,7 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDr
                             className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
                             data-id={square.id}
                             key={square.id}
-                            onClick={(e) => gameboard.clickHandler(e, ships, square.id)} // NOTE: Could be better to call gameEngine.
+                            onClick={(e) => gameEngine.handleGameboardClick(e, player, square.id)} // NOTE: Could be better to call gameEngine.
                             onDragEnter={dragEnter}
                             onDragOver={dragOver}
                             onDragLeave={dragLeave}
