@@ -1,5 +1,3 @@
-import gameEngine from "../../gameEngine"
-
 const gameboardFactory = () => {
 
     let gameboard = []
@@ -17,12 +15,6 @@ const gameboardFactory = () => {
         }
 
         return gameboard
-    }
-
-    // NOTE: Should probably be handled from gameEngine. instead of calling gameEngine from gameboard.
-    const shipDragAndDropHandler = (player) => {
-        console.log(player.fleet.ships);
-        gameEngine.updatePlayersState()
     }
 
     const clearBoard = () => { gameboard.length = 0 }
@@ -114,7 +106,6 @@ const gameboardFactory = () => {
         clearBoard,
         getBoard,
         initGameboard,
-        shipDragAndDropHandler,
         placeAllShips,
         placeShip,
         receiveAttack
