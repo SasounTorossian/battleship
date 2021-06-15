@@ -7,8 +7,10 @@ const GameArea = ({ players }) => {
     console.log(players);
     const [horizontal, setHorizontal] = useState(true)
 
+    // sets horizontal variable on orientation change.
     const handleHorizontal = () => { setHorizontal(!horizontal) }
 
+    // Called to reset player ship positions during drag and drop process.
     const handleReset = () => { gameEngine.handleGameboardReset(players[0]) }
 
     let draggedShip // Element that is selected when selected ship entered drag space. E.g. <div class="ship destroyer-container-horizontal" draggable="true"></>
@@ -59,20 +61,14 @@ const GameArea = ({ players }) => {
         })
     }
 
-    // NOTE: Not Needed
-    const dragLeave = (e) => {
-        e.preventDefault()
-    }
+    // NOTE: Not used, but needed for for drag and drop to work.
+    const dragLeave = (e) => { e.preventDefault() }
 
-    // NOTE: Not Needed
-    const dragOver = (e) => {
-        e.preventDefault()
-    }
+    // NOTE: Not used, but needed for for drag and drop to work.
+    const dragOver = (e) => { e.preventDefault() }
 
     // dragEnd event that activates when user releases mouse-down in invalid position on gameboard.
-    const dragEnd = (e) => {
-        clearAllHighlights()
-    }
+    const dragEnd = (e) => { clearAllHighlights() }
 
     // NOTE: move to gameEngine?
     // dragDrop event that activates when user releases mouse-down over valid position on gameboard.
@@ -139,7 +135,7 @@ const GameArea = ({ players }) => {
                 handleReset={handleReset}
             />
             <Dock 
-                playerShips={players[0].fleet.ships} 
+                players={players} 
                 horizontal={horizontal}
                 mouseDown={mouseDown}
                 dragStart={dragStart}
@@ -149,7 +145,6 @@ const GameArea = ({ players }) => {
     )
 }
 
-// NOTE: Do I even need a humanPlayer?
 const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
     return (
         <div className="Gameboards">
@@ -169,7 +164,6 @@ const Gameboards = ({ players, dragEnter, dragOver, dragLeave, dragDrop }) => {
     )
 }
 
-
 const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDrop }) => {
     
     let gameboard = player.gameboard
@@ -182,7 +176,7 @@ const Gameboard = ({ player, humanPlayer, dragEnter, dragOver, dragLeave, dragDr
                             className={`gamesquare gamesquare-${square.ship.type || "empty"} ${humanPlayer ? "user-gamesquare" : ""}`} 
                             data-id={square.id}
                             key={square.id}
-                            onClick={(e) => gameEngine.handleGameboardClick(e, player, square.id)} // NOTE: Could be better to call gameEngine.
+                            onClick={(e) => gameEngine.handleGameboardClick(e, player, square.id)}
                             onDragEnter={dragEnter}
                             onDragOver={dragOver}
                             onDragLeave={dragLeave}
@@ -210,10 +204,11 @@ const Control = ({ handleHorizontal, handleReset }) => {
     )
 }
 
-const Dock = ({ playerShips, horizontal, mouseDown,  dragStart, dragEnd}) => {
+const Dock = ({ players, horizontal, mouseDown,  dragStart, dragEnd}) => {
+    let humanPlayerShips = players[0].fleet.ships
     return (
         <div className={`Dock ${horizontal ? "dock-horizontal" : "dock-vertical"}`}>
-            {playerShips.map(ship => {
+            {humanPlayerShips.map(ship => {
                 if(ship.position.length === 0) {
                     return (
                         <div 
