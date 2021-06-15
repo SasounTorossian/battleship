@@ -35,6 +35,13 @@ const gameEngine = (() => {
         updatePlayersState()
     }
 
+    const handleGameboardReset = (player) => {
+        player.fleet.ships.forEach(ship => ship.position.length = 0)
+        player.gameboard.resetGameboard()
+        updateHumanPlayer(player)
+        updatePlayersState()
+    }
+
     // Initialized gameboard for both players.
     const initializePlayersGameboard = () => {
         players.forEach(player => player.gameboard.initGameboard())
@@ -74,6 +81,7 @@ const gameEngine = (() => {
         updatePlayersState,
         initializePlayers,
         handleGameboardClick,
+        handleGameboardReset,
         initializePlayersGameboard,
         placeAIShips,
         getPlayers,

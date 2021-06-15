@@ -9,18 +9,7 @@ const GameArea = ({ players }) => {
 
     const handleHorizontal = () => { setHorizontal(!horizontal) }
 
-    // NOTE: move to gameEngine?
-    const handleReset = () => {
-        let humanPlayer = players[0]
-        humanPlayer.fleet.ships.forEach(ship => {
-            ship.position = []
-        })
-
-        humanPlayer.gameboard.clearBoard()
-        humanPlayer.gameboard.initGameboard()
-        gameEngine.updateHumanPlayer(humanPlayer)
-        gameEngine.updatePlayersState()
-    }
+    const handleReset = () => { gameEngine.handleGameboardReset(players[0]) }
 
     let draggedShip // Element that is selected when selected ship entered drag space. E.g. <div class="ship destroyer-container-horizontal" draggable="true"></>
     let draggedShipChildren // All the children elements that make up ship element. E.g. [<div class="ship-segment" id="destroyer-0"></div>, <div class="ship-segment" id="destroyer-1"></div>]

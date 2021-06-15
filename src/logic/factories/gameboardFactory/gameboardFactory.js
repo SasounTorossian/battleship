@@ -21,6 +21,11 @@ const gameboardFactory = () => {
 
     const getBoard = () => { return gameboard }
 
+    const resetGameboard = () => {
+        clearBoard()
+        initGameboard()
+    }
+
     // Check if ship placement interferes with existing ships.
     const checkShipCollision = (orientation, position) => {
         return orientation.some(index => gameboard[position + index].occupied === true )
@@ -103,7 +108,7 @@ const gameboardFactory = () => {
 
     return {
         gameboard,
-        clearBoard,
+        resetGameboard,
         getBoard,
         initGameboard,
         placeAllShips,
